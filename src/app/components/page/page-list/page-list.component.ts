@@ -15,7 +15,7 @@ export class PageListComponent implements OnInit {
   websiteId: String;
   pages: any = [];
 
-  constructor(private pageService: PageService, 
+  constructor(private pageService: PageService,
     private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
