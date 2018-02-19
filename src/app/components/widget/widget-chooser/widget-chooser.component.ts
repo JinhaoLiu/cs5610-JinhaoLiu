@@ -16,7 +16,7 @@ export class WidgetChooserComponent implements OnInit {
   pageId: String;
 
   constructor(
-    private widgetService: WidgetService, 
+    private widgetService: WidgetService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) { }
@@ -37,6 +37,6 @@ export class WidgetChooserComponent implements OnInit {
     }
     this.widgetService.createWidget(this.pageId, newWidget);
     let url: any = "/user/" + this.userId + "/website/" + this.websiteId + "/page/" + this.pageId + "/widget/" + newWidget._id;
-    this.router.navigate([url]); 
+    this.router.navigate([url]);
   }
 }

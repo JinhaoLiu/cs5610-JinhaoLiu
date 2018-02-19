@@ -19,7 +19,7 @@ export class WidgetEditComponent implements OnInit {
   widget: Widget;
 
   constructor(
-    private widgetService: WidgetService, 
+    private widgetService: WidgetService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) { }
