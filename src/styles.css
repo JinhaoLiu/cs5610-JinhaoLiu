@@ -1,3 +1,11 @@
+.borders {
+  border-left: 1px solid #ddd;
+  margin: -20px;
+  height:750px;
+  left: 20px;
+
+}
+
 body {
   padding-top: 70px;
   padding-bottom: 70px;
@@ -15,7 +23,7 @@ a:hover{
 }
 
 .cl-container-padding {
-  padding-top: 5%;
+  padding-top: 1%;
   padding-bottom: 10%;
 }
 
@@ -102,11 +110,8 @@ a:hover{
   position: relative;
 }
 
-.borders {
-  border-left: 1px solid #ddd;
-  margin: -18px;
-  height:750px;
-  left: 20px;
+.cl-font-size {
+  font-size: 20px;
 }
 
 .cl-8-top {
@@ -114,6 +119,20 @@ a:hover{
   margin-left: 0px;
 }
 
-.whiteBackground{
+.cl-widget-gly-color {
+  color: #000000;
+}
+
+.cl-widget-toolbar-cog {
   background-color: white;
+  border-bottom-left-radius: 10px;
+  font-size:20px;
+  padding-bottom: 5px;
+  padding-left: 2px;
+}
+
+.cl-widget-toolbar-hamburger {
+  background-color: white;
+  font-size:20px;
+  padding-bottom: 5px;
 }
