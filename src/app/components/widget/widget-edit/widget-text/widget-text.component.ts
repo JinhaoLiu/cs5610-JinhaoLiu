@@ -1,30 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgSwitch } from '@angular/common';
 
-import { WidgetService } from '../../../services/widget.service.client';
-import { Widget } from '../../../models/widget.model.client';
-import { PageService } from '../../../services/page.service.client';
-import { WebsiteService } from '../../../services/website.service.client';
-import { UserService } from '../../../services/user.service.client';
-import { Page } from '../../../models/page.model.client';
-import { Website } from '../../../models/website.model.client';
+import { WidgetService } from '../../../../services/widget.service.client';
+import { Widget } from '../../../../models/widget.model.client';
+import { PageService } from '../../../../services/page.service.client';
+import { WebsiteService } from '../../../../services/website.service.client';
+import { UserService } from '../../../../services/user.service.client';
+import { Page } from '../../../../models/page.model.client';
+import { Website } from '../../../../models/website.model.client';
 
 @Component({
-  selector: 'app-widget-edit',
-  templateUrl: './widget-edit.component.html',
-  styleUrls: ['./widget-edit.component.css']
+  selector: 'app-widget-text',
+  templateUrl: './widget-text.component.html',
+  styleUrls: ['./widget-text.component.css']
 })
-export class WidgetEditComponent implements OnInit {
-
+export class WidgetTextComponent implements OnInit {
+  // properties
+  widget: Widget = {
+    _id: "", widgetType: "", name: '', pageId: "", size: "1", text: "", url: "", width: "100%",
+    height: 100, rows: 0, class: '', icon: '', deletable: false, formatted: false, placeholder: ''
+  };
   userId: String;
   websiteId: String;
   pageId: String;
   widgetId: String;
-  widget: Widget = {
-    _id: "", widgetType: '', name: '', pageId: "", size: "1", text: "", url: "", width: "100%",
-      height: 100, rows: 0, class: '', icon: '', deletable: false, formatted: false, placeholder: ''
-  };
 
   constructor(
     private widgetService: WidgetService,
@@ -65,6 +64,30 @@ export class WidgetEditComponent implements OnInit {
             }
           }
         );
+      }
+    );
+  }
+
+  updateWidget(widget: Widget) {
+    this.widgetService.updateWidget(this.widgetId, widget).subscribe(
+      (widget: Widget) => {
+        let url: any = "/user/" + this.userId + "/website/" + this.websiteId + "/page/" + this.pageId + "/widget";
+        this.router.navigate([url]);
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+  }
+
+  deleteWidget() {
+    this.widgetService.deleteWidget(this.widgetId).subscribe(
+      (widget: Widget) => {
+        let url: any = "/user/" + this.userId + "/website/" + this.websiteId + "/page/" + this.pageId + "/widget";
+        this.router.navigate([url]);
+      },
+      (error: any) => {
+        console.log(error);
       }
     );
   }

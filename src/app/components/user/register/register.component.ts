@@ -14,26 +14,25 @@ export class RegisterComponent implements OnInit {
 
   @ViewChild('f') registerForm: NgForm;
 
-  user: User = {_id:"", username: "", password: "", firstName: "", lastName: ""};
+  user: User = { _id: "", username: "", password: "", firstName: "", lastName: "" };
   username: String;
   password: String;
   verifyPassword: String;
   errorFlag: boolean;
   errorMsg: String;
-  
+
   constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit() { }
 
-  register() {
+  register(username: String, password: String, verifyPassword: String) {
     this.errorFlag = false;
-    this.errorFlag = false;
-    this.username = this.registerForm.value.username;
-    this.password = this.registerForm.value.password;
-    this.verifyPassword = this.registerForm.value.verifyPassword;
-
-    if (this.userService.findUserByUsername(this.username) != null) {
-      this.errorMsg = 'This username is already exist.';
+    if (username.trim() == "") {
+      this.errorMsg = 'Username cannot be empty';
+      this.errorFlag = true;
+    }
+    if (password.trim() == "") {
+      this.errorMsg = 'Password cannot be empty';
       this.errorFlag = true;
     }
     if (this.password != this.verifyPassword) {
@@ -43,8 +42,16 @@ export class RegisterComponent implements OnInit {
     if (!this.errorFlag) {
       this.user.username = this.username;
       this.user.password = this.password;
-      this.userService.createUser(this.user);
-      this.router.navigate(['/user', this.userService.findUserByUsername(this.username)._id]);
+      this.userService.createUser(this.user).subscribe(
+        (user: User) => {
+          this.errorFlag = false;
+          this.router.navigate(['/user', user._id]);
+        },
+        (error: any) => {
+          this.errorFlag = true;
+          this.errorMsg = error;
+        }
+      );
     }
   }
 }

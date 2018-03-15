@@ -56,7 +56,7 @@ a:hover{
 
 .cl-widget-images {
     position: relative;
-    width: 85%;
+    /* width: 85%; */
     display: inline;
     z-index: 99;
 }

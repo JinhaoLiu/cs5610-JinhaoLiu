@@ -2,7 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-
+import { QuillEditorModule } from 'ngx-quill-editor';
+// import { TestService } from './services/tes.service.client';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/user/login/login.component';
@@ -25,6 +26,9 @@ import { WidgetImageComponent } from './components/widget/widget-edit/widget-ima
 import { WidgetYoutubeComponent } from './components/widget/widget-edit/widget-youtube/widget-youtube.component';
 import { WidgetListComponent } from './components/widget/widget-list/widget-list.component';
 import { Routing } from './app.routing';
+import { SortableDirective } from './sortable.directive';
+import { WidgetHtmlComponent } from './components/widget/widget-edit/widget-html/widget-html.component';
+import { WidgetTextComponent } from './components/widget/widget-edit/widget-text/widget-text.component';
 
 @NgModule({
   declarations: [
@@ -43,13 +47,17 @@ import { Routing } from './app.routing';
     WidgetHeaderComponent,
     WidgetImageComponent,
     WidgetYoutubeComponent,
-    WidgetListComponent
+    WidgetListComponent,
+    SortableDirective,
+    WidgetHtmlComponent,
+    WidgetTextComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    Routing
+    Routing,
+    QuillEditorModule
   ],
   providers: [UserService, WebsiteService, PageService, WidgetService],
   bootstrap: [AppComponent]

@@ -13,8 +13,8 @@ export class WebsiteEditComponent implements OnInit {
 
   // properties
   websiteId: String;
-  websites: any[] = [{ _id: "", name: "", developerId: "", description: "" }];
-  updatedWebsite: Website;
+  websites: Website[];
+  updatedWebsite: Website = {_id:"", name:"", developerId:"", description:""};
   name: String;
   developerId: String;
   description: String;
@@ -25,33 +25,56 @@ export class WebsiteEditComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(
-      (params: any) => {
-        this.websiteId = params['wid'];
-        this.developerId = params['uid'];
+      params => {
+       this.websiteService.findWebsiteById(params.wid).subscribe(
+          (website: Website) => {
+            this.websiteId = website._id;
+            this.developerId = website.developerId;
+            this.updatedWebsite = website;
+            console.log(this.updatedWebsite.name);
+          },
+          (error: any) => {
+            // this is the place to put an error message
+          }
+        );
+       this.websiteService.findWebsitesByUser(params.uid).subscribe(
+          (websites: Website[]) => {
+            this.websites = websites;
+          },
+          (error: any) => {
+            // this is the place to put an error message
+          }
+        );
       }
     );
-
-    this.websites = this.websiteService.findWebsitesByUser(this.developerId);
-    this.updatedWebsite = this.websiteService.findWebsiteById(this.websiteId);
-    // this.name = this.website['name'];
-    // if (this.developerId !== this.website['developerId']) {
-    //   alert('Developer Id did not match!');
-    // }
-    // this.description = this.website['description'];
   }
 
-  updateWebsite(updatedWebsite) {
-    if (updatedWebsite.name.trim() != "") {
-      updatedWebsite.developerId = this.developerId;
-      this.websiteService.updateWebsite(updatedWebsite._id, updatedWebsite);
-      let url: any = '/user/' + this.developerId + '/website';
-      this.router.navigate([url]);
+  updateWebsite(website) {
+    if (website.name.trim() != "" && website.description.trim() != "") {
+      this.websiteService.updateWebsite(this.websiteId, website).subscribe(
+        (website: Website) => {
+          this.updatedWebsite = website;
+          let url: any = '/user/' + this.developerId + '/website';
+          this.router.navigate([url]);
+        },
+        (error: any) => {
+          // This is the place to put an error message
+        }
+      );
     }
   }
 
   deleteWebsite() {
-    this.websiteService.deleteWebsite(this.websiteId);
-    let url: any = '/user/' + this.developerId + '/website';
-    this.router.navigate([url]);
+    if (this.websiteId.trim() != "") {
+      this.websiteService.deleteWebsite(this.websiteId).subscribe(
+        (website: Website) => {
+          let url: any = '/user/' + this.developerId + '/website';
+          this.router.navigate([url]);
+        },
+        (error: any) => {
+          // Place error message;
+        }
+      );
+    }
   }
 }

@@ -24,17 +24,27 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() { }
 
-  login() {
-    // fetching data from loginForm
-    this.username = this.loginForm.value.username;
-    this.password = this.loginForm.value.password;
-    // alert(this.username);
-
-    const user: User = this.userService.findUserByCredentials(this.username, this.password);
-    if (user) {
-      this.router.navigate(['/user', user._id]);
-    } else {
+  login(username: String, password: String) {
+    if (username.trim() == "") {
+      this.errorMsg = 'Username cannot be empty';
       this.errorFlag = true;
+    }
+    if (password.trim() == "") {
+      this.errorMsg = 'Password cannot be empty';
+      this.errorFlag = true;
+    }
+    if (!this.errorFlag) {
+      this.userService.findUserByCredentials(username, password)
+        .subscribe(
+          (user: User) => {
+            this.errorFlag = false;
+            this.router.navigate(['/user', user._id]);
+          },
+          (error: any) => {
+            this.errorFlag = true;
+            this.errorMsg = error;
+          }
+        );
     }
   }
 
