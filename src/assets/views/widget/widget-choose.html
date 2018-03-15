@@ -1,60 +1,75 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Widget Choose</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-        crossorigin="anonymous">
-    <link href="../../css/styles.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta charset="UTF-8">
+  <title>Widget List</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="../css/styles.css" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
-
 <body>
-    <nav class="navbar navbar-fixed-top navbar-light bg-secondary">
-        <a class="navbar-brand" href="widget-list.html">
-            <span class="glyphicon glyphicon-chevron-left text-dark"></span>
-        </a>
-        <div class="navbar-brand font-weight-bold">
-            Choose Widget
-        </div>
-    </nav>
-    <div class="container-fluid cl-body-padding">
-        <div class="extra-padding">
-            <a class="extra-left-padding" href="widget-heading.html">Header</a>
-        </div>
-        <div class="extra-padding">
-            <a class="extra-left-padding" href="#">Label</a>
-        </div>
-        <div class="extra-padding">
-            <a class="extra-left-padding" href="#">HTML</a>
-        </div>
-        <div class="extra-padding">
-            <a class="extra-left-padding" href="#">Text Input</a>
-        </div>
-        <div class="extra-padding">
-            <a class="extra-left-padding" href="#">Link</a>
-        </div>
-        <div class="extra-padding">
-            <a class="extra-left-padding" href="#">Button</a>
-        </div>
-        <div class="extra-padding">
-            <a class="extra-left-padding" href="widget-image.html">Image</a>
-        </div>
-        <div class="extra-padding">
-            <a class="extra-left-padding" href="widget-youtube.html">YouTube</a>
-        </div>
-        <div class="extra-padding">
-            <a class="extra-left-padding" href="#">Data Table</a>
-        </div>
-        <div class="extra-padding">
-            <a class="extra-left-padding" href="#">Repeater</a>
-        </div>
-    </div>
-    <nav class="navbar navbar-fixed-bottom navbar-light bg-secondary">
-        <a class="navbar-brand pull-right" href="../user/profile.html">
-            <span class="glyphicon glyphicon-user text-primary"></span>
-        </a>
-    </nav>
-</body>
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid row">
 
+    <div class="navbar-text pull-left">
+      <a href="widget-list.html" class="cl-text-black cl-icon-padding">
+          <span class="glyphicon glyphicon-chevron-left">
+          </span>
+      </a>
+    </div>
+
+    <a class="navbar-brand cl-text-white cl-text-bold" href="#">
+      Choose Widget
+    </a>
+  </div>
+</nav>
+
+<div class="container-fluid cl-container-padding">
+  <ul class="list-group cl-list-group-borderless">
+    <li class="list-group-item cl-list-item-borderless">
+      <a href="widget-heading.html">Header</a>
+    </li>
+    <li class="list-group-item cl-list-item-borderless">
+      <a href="#">Label</a>
+    </li>
+    <li class="list-group-item cl-list-item-borderless">
+      <a href="#">HTML</a>
+    </li>
+    <li class="list-group-item cl-list-item-borderless">
+      <a href="#">Text Input</a>
+    </li>
+    <li class="list-group-item cl-list-item-borderless">
+      <a href="#">Link</a>
+    </li>
+    <li class="list-group-item cl-list-item-borderless">
+      <a href="#">Button</a>
+    </li>
+    <li class="list-group-item cl-list-item-borderless">
+      <a href="widget-image.html">Image</a>
+    </li>
+    <li class="list-group-item cl-list-item-borderless">
+      <a href="widget-youtube.html">YouTube</a>
+    </li>
+    <li class="list-group-item cl-list-item-borderless">
+      <a href="#">Data Table</a>
+    </li>
+    <li class="list-group-item cl-list-item-borderless">
+      <a href="#">Repeater</a>
+    </li>
+  </ul>
+</div>
+
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <div class="container-fluid row">
+    <div class="pull-right navbar-text">
+
+      <a href="../user/profile.html" class="cl-icon-padding">
+        <span class="glyphicon glyphicon-user"></span>
+      </a>
+
+    </div>
+  </div>
+</nav>
+
+</body>
 </html>
