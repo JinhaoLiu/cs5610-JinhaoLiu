@@ -5,6 +5,5 @@
 
 export const environment = {
   production: false,
-  // baseUrl: 'http://localhost:3100/'
-  baseUrl: 'https://webdev-jinhaoliu.herokuapp.com/'
+  baseUrl: 'https://webdev-jinhaoliu.herokuapp.com'
 };
