@@ -1,0 +1,67 @@
+<div class="container">
+  <div *ngIf="errorFlag"
+       class="alert alert-danger">
+    {{ errorMsg }}
+  </div>
+  <h1>Register</h1>
+  <form (ngSubmit)="onSubmit()" #f="ngForm">
+    <input type="text"
+           class="form-control"
+           placeholder="username"
+           required
+           ngModel
+           name="username"
+           #username="ngModel"
+           />
+    <span class="help-block" *ngIf="!username.valid && username.touched">
+      Please enter username!
+   </span>
+    <input type="text"
+           class="form-control"
+           placeholder="firstName"
+           required
+           ngModel
+           name="firstName"
+           #firstName="ngModel"
+    />
+    <span class="help-block" *ngIf="!firstName.valid && firstName.touched">
+      Please enter firstName!
+   </span>
+    <input type="text"
+           class="form-control"
+           placeholder="lastName"
+           required
+           ngModel
+           name="lastName"
+           #lastName="ngModel"
+    />
+    <span class="help-block" *ngIf="!lastName.valid && lastName.touched">
+      Please enter lastName!
+   </span>
+    <input type="password"
+           class="form-control"
+           placeholder="password"
+           required
+           ngModel
+           name="password"
+           #password="ngModel"/>
+    <span class="help-block" *ngIf="!password.valid && password.touched">
+      Please enter password!
+   </span>
+    <input type="password"
+           class="form-control"
+           placeholder="verify password"
+           required
+           ngModel
+           name="verifyPassword"
+           #verifyPassword="ngModel"/>
+    <span class="help-block" *ngIf="!verifyPassword.valid && verifyPassword.touched">
+      Please verify password!
+   </span>
+    <button class="btn btn-primary btn-block"
+            type="submit"
+            [disabled]="!f.valid">Register</button>
+    <a class="btn btn-danger  btn-block"
+            (click)="login()" >Cancel</a>
+  </form>
+</div>

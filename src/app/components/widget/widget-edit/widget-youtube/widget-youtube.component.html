@@ -1,0 +1,70 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid row">
+
+    <div class="navbar-text pull-left">
+      <a [routerLink]="['/user', userId, 'website', websiteId, 'page', pageId, 'widget']" class="cl-text-black cl-icon-padding">
+          <span class="glyphicon glyphicon-chevron-left">
+          </span>
+      </a>
+    </div>
+    <div class="navbar-text pull-right">
+      <a (click)="onSubmit()" class="cl-icon-padding cl-text-black">
+          <span class="glyphicon glyphicon-ok">
+          </span>
+      </a>
+    </div>
+    <a class="navbar-brand cl-text-white cl-text-bold">
+      Widgets Edit
+    </a>
+  </div>
+</nav>
+
+<div class="container">
+  <div *ngIf="errorFlag"
+       class="alert alert-danger">
+    {{errorMsg}}
+  </div>
+  <form #f="ngForm">
+    <div class="form-group">
+      <label for="youtube-name">Name</label>
+      <input type="text" class="form-control" id="youtube-name" placeholder="Name" name="name" ngModel #name="ngModel" required [(ngModel)]="widget.name">
+      <span class="help-block" *ngIf="!text.valid && text.touched">
+        Please enter valid youtube name!
+      </span>
+    </div>
+    <div class="form-group">
+      <label for="youtube-text">Text</label>
+      <input type="text" class="form-control" id="youtube-text" placeholder="Text" name="text" ngModel #text="ngModel" required [(ngModel)]="widget.text">
+      <span class="help-block" *ngIf="!text.valid && text.touched">
+        Please enter valid youtube text!
+      </span>
+    </div>
+    <div class="form-group">
+      <label for="youtube-URL">URL</label>
+      <input type="url" class="form-control" id="youtube-URL" placeholder="URL" name="url" ngModel #url="ngModel" required [(ngModel)]="widget.url">
+      <span class="help-block" *ngIf="!text.valid && text.touched">
+        Please enter valid youtube url!
+      </span>
+    </div>
+    <div class="form-group">
+      <label for="youtube-width">Width</label>
+      <input type="text" class="form-control" id="youtube-width" placeholder="100%" name="width" ngModel #width="ngModel" required [(ngModel)]="widget.width">
+      <span class="help-block" *ngIf="!text.valid && text.touched">
+        Please enter valid youtube width!
+      </span>
+    </div>
+  </form>
+  <a class="btn btn-danger btn-block" (click)="onDelete()">Delete</a>
+</div>
+
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <div class="container-fluid row">
+    <div class="pull-right navbar-text">
+
+      <a [routerLink]="['/user', userId]" class="cl-icon-padding">
+        <span class="glyphicon glyphicon-user"></span>
+      </a>
+
+    </div>
+  </div>
+</nav>

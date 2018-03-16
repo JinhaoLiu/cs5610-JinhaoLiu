@@ -1,0 +1,53 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid row">
+
+    <div class="navbar-text pull-left">
+      <a [routerLink]="['/user',userId, 'website', websiteId, 'page']" class="cl-text-black cl-icon-padding">
+          <span class="glyphicon glyphicon-chevron-left">
+          </span>
+      </a>
+    </div>
+    <div class="navbar-text pull-right">
+      <a (click)="onClick()" class="cl-icon-padding cl-text-black">
+          <span class="glyphicon glyphicon-ok">
+          </span>
+      </a>
+    </div>
+    <a class="navbar-brand cl-text-white cl-text-bold">
+      New Page
+    </a>
+  </div>
+</nav>
+
+<div class="container">
+  <div *ngIf="errorFlag"
+       class="alert alert-danger">
+    {{errorMsg}}
+  </div>
+  <form #f="ngForm">
+    <div class="form-group">
+      <label for="page-name">Name</label>
+      <input type="text" class="form-control" id="page-name" placeholder="Page Name" name="name" ngModel #name="ngModel" required>
+      <span class="help-block" *ngIf="!name.valid && name.touched">
+      Please enter Page Name!
+      </span>
+    </div>
+    <div class="form-group">
+      <label for="page-title">Title</label>
+      <input type="text" class="form-control" id="page-title" placeholder="Page Title" name="title" ngModel #title="ngModel" required>
+      <span class="help-block" *ngIf="!title.valid && title.touched">
+      Please enter Page Title!
+      </span>
+    </div>
+  </form>
+</div>
+
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <div class="container-fluid row">
+    <div class="pull-right navbar-text">
+      <a [routerLink]="['/user', userId]" class="cl-icon-padding">
+        <span class="glyphicon glyphicon-user"></span>
+      </a>
+    </div>
+  </div>
+</nav>
