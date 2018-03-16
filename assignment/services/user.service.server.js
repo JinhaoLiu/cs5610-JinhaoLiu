@@ -1,45 +1,36 @@
 module.exports = function (app) {
 
-  app.post("/api/user", createUser);
+  //Put calls
+  app.put("/api/user/:userId",updateUser);
+
+  //GET calls
+  app.get("/api/user/hello", helloUser);
+  app.get("/api/user/:userId",findUserById);
   app.get("/api/user", findUserByCredentials);
-  app.get("/api/user/:userId", findUserById);
-  app.put("/api/user/:userId", updateUserById);
+
+  //Post calls
+  app.post("/api/user", createUsers);
+
+  //delete calls
   app.delete("/api/user/:userId", deleteUser);
 
-
-  //app.get("/api/user", findUsers);
-
   var users = [
-    {_id: "123", username: "alice",    password: "alice",    firstName: "Alice",  lastName: "Wonderland", email: 'alice@123.com'  },
-    {_id: "234", username: "bob",      password: "bob",      firstName: "Bob",    lastName: "Marley", email: 'bob@123.com'  },
-    {_id: "345", username: "charly",   password: "charly",   firstName: "Charly", lastName: "Garcia", email: 'charly@123.com'  },
-    {_id: "456", username: "jannunzi", password: "jannunzi", firstName: "Jose",   lastName: "Annunzi", email: 'jannunzi@123.com' }
+    {_id: "123", username: "alice",    password: "alice",    firstName: "Alice",  lastName: "Wonder"  },
+    {_id: "234", username: "bob",      password: "bob",      firstName: "Bob",    lastName: "Marley"  },
+    {_id: "345", username: "charly",   password: "charly",   firstName: "Charly", lastName: "Garcia"  },
+    {_id: "456", username: "jannunzi", password: "jannunzi", firstName: "Jose",   lastName: "Annunzi" }
   ];
 
-  function createUser(req, res){
+  function helloUser(req, res) {
+    res.send("Hello from user service!");
+  }
+
+  function createUsers(req, res) {
     var user = req.body;
     user._id = new Date().getTime().toString();
     users.push(user);
     res.json(user);
   }
-
-  // function findUserByUsername(req, res){
-  //   var username = req.query.username;
-  //   var user = users.find(function (user) {
-  //     return user.username === username;
-  //   });
-  //   res.json(user);
-  // }
-
-  function findUserByCredentials(req, res){
-    var username = req.query.username;
-    var password = req.query.password;
-    var user = users.find(function (user) {
-      return user.username === username && user.password === password;
-    });
-    res.json(user);
-  }
-
 
   function findUserById(req, res){
     var userId = req.params["userId"];
@@ -49,11 +40,13 @@ module.exports = function (app) {
     res.json(user);
   }
 
-  function findAllUsers(req, res){
-    res.json(users);
-  }
+  // function findUserByUsername(req, res) {
+  //   var username = req.param["username"];
+  //   var user = user.find((user) => (user.username === username))
+  //   res.json(user);
+  // }
 
-  function findUsers(req, res){
+  function findUserByCredentials(req, res){
     var username = req.query["username"];
     var password = req.query["password"];
 
@@ -63,11 +56,17 @@ module.exports = function (app) {
       user = users.find(function (user) {
         return user.username === username && user.password === password;
       });
+      if (user) {
+        res.status(200).send(user);
+      } else {
+        res.status(404).send('Not found');
+      }
     }
+    // res.sendStatus(200);
     res.json(user);
   }
 
-  function updateUserById(req, res){
+  function updateUser(req, res){
     var userId = req.params['userId'];
     var user = req.body;
 
@@ -86,16 +85,23 @@ module.exports = function (app) {
     res.status(404).send("not found!");
   }
 
-  function deleteUser(req, res){
+  function deleteUser(req, res) {
     var userId = req.params['userId'];
+    var user = req.body;
+
+    console.log(req.body);
+    console.log("delete user: " + userId + " " + user.firstName + " " + user.lastName);
 
     for(var i = 0; i < users.length; i++) {
       if (users[i]._id === userId) {
-        users.slice(i, 1);
-        res.status(200).send("user is deleted");
+        users[i].firstName = user.firstName;
+        users[i].lastName = user.lastName;
+        users.splice(i,1);
+        res.sendStatus(200);
         return;
       }
     }
     res.status(404).send("not found!");
   }
-};
+
+}
