@@ -23,12 +23,14 @@ import { WidgetYoutubeComponent } from './views/widget/widget-edit/widget-youtub
 import {WebsiteService} from './services/website.service.client';
 import {PageService} from './services/page.service.client';
 import {WidgetService} from './services/widget.service.client';
+import {FlickrService} from './services/flickr.service.client';
 import {HttpClientModule} from '@angular/common/http';
 import {HttpModule} from '@angular/http';
 import { SortableDirective } from '../../assignment/directives/sortable.directive';
 import { WidgetHtmlComponent } from './views/widget/widget-edit/widget-html/widget-html.component';
 import {QuillEditorModule} from 'ngx-quill-editor/quillEditor.module';
 import { WidgetTextComponent } from './views/widget/widget-edit/widget-text/widget-text.component';
+import { FlickrImageSearchComponent } from './views/widget/widget-edit/widget-image/flickr-image-search/flickr-image-search.component';
 
 
 @NgModule({
@@ -52,6 +54,7 @@ import { WidgetTextComponent } from './views/widget/widget-edit/widget-text/widg
     SortableDirective,
     WidgetHtmlComponent,
     WidgetTextComponent,
+    FlickrImageSearchComponent,
   ],
   imports: [
     BrowserModule,
@@ -61,7 +64,7 @@ import { WidgetTextComponent } from './views/widget/widget-edit/widget-text/widg
     HttpModule,
     QuillEditorModule,
   ],
-  providers: [UserService, WebsiteService, PageService, WidgetService],
+  providers: [UserService, WebsiteService, PageService, WidgetService, FlickrService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

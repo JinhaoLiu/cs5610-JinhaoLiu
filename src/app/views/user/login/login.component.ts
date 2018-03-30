@@ -20,9 +20,9 @@ export class LoginComponent implements OnInit {
   constructor(private userService: UserService, private router: Router) { }
   login() {
     this.userService.findUserByCredential(this.username, this.passname)
-      .subscribe((data: any) => {
+      .subscribe((user: User) => {
           this.errorFlag = false;
-          this.router.navigate(['/user', data._id]); },
+          this.router.navigate(['/user', user._id]); },
         (error: any) => {
           this.errorFlag = true;
         });

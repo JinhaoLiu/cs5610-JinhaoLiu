@@ -59,7 +59,7 @@ export class WidgetHtmlComponent implements OnInit {
         this.pageID = params['pid'];
         this.wgid = params['wgid'];
         if (this.wgid === undefined) {
-          this.widget = new Widget('', 'HTML', this.pageID, '', '', '', '');
+          this.widget = new Widget(undefined, 'HTML', this.pageID, '', '', '', '');
         } else {
           this.widgetService.findWidgetById(this.wgid).subscribe(
             (widget: Widget) => {

@@ -43,8 +43,8 @@
       <div class="form-group">
         <label class="cl-8-top" for="website-name">Name</label>
         <input type="text" class="form-control" id="website-name" placeholder="Name"
-               ngModel required
-               name="webname" #webname="ngModel"/>
+               [(ngModel)]="webname" required
+               name="webname"/>
         <div [hidden]="webname.valid || webname.untouched"
              class="alert alert-danger">
           Name is required
@@ -53,8 +53,8 @@
       <div class="form-group">
         <label for="website-description">Description</label>
         <textarea id="website-description" class="form-control" rows="5" placeholder="Description"
-          ngModel required
-          name="description" #description="ngModel"></textarea>
+          [(ngModel)]="description" required
+          name="description"></textarea>
       </div>
     <button class="btn btn-primary btn-block" type="submit" [disabled]="!f.valid">Submit</button>
     </form>

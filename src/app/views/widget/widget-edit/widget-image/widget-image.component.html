@@ -8,9 +8,9 @@
       </a>
     </div>
     <div class="navbar-text pull-right">
-      <a routerLink=".." class="cl-icon-padding cl-text-black">
-          <span class="glyphicon glyphicon-ok">
-          </span>
+      <a class="cl-icon-padding cl-text-black">
+        <button class="glyphicon glyphicon-ok" (click)="f.ngSubmit.emit()">
+        </button>
       </a>
     </div>
     <a class="navbar-brand cl-text-white cl-text-bold">
@@ -60,6 +60,7 @@
   </form>
   <!--<button class="btn btn-primary btn-block" type="submit" [disabled]="!f.valid">Upload Image</button>-->
   <button class="btn btn-danger  btn-block" (click)="delete()">Delete</button>
+  <button class="btn btn-primary  btn-block" (click)="search()">Search</button>
 </div>
 
 <nav class="navbar navbar-default navbar-fixed-bottom">

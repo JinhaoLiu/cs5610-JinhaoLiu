@@ -44,9 +44,9 @@ export class WidgetService {
 
   reSortWidget(pageId: String, start: String, end: String) {
     const url = this.baseUrl + '/page/' + pageId + '/widget?initial=' + start + '&final=' + end;
-    return this.http.put(url, '')
-      .map((res: Response) => {
-      return res.json();
-    });
+    return this.http.put(url, '');
+    //   .map((res: Response) => {
+    //   return res.json();
+    // });
   }
 }

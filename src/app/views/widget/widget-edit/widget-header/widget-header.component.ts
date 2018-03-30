@@ -48,7 +48,7 @@ export class WidgetHeaderComponent implements OnInit {
         this.pageID = params['pid'];
         this.wgid = params['wgid'];
         if (this.wgid === undefined) {
-          this.widget = new Widget('', 'HEADER', this.pageID, '', '', '', '');
+          this.widget = new Widget(undefined, 'HEADER', this.pageID, '', '', '', '');
         } else {
           this.widgetService.findWidgetById(this.wgid).subscribe(
             (widget: Widget) => {

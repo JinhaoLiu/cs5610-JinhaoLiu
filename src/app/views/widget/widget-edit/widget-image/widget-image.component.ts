@@ -36,6 +36,7 @@ export class WidgetImageComponent implements OnInit {
     this.widgetService.createWidget(this.pageID, new_widget).subscribe(
       (widget: Widget) => {
         this.widget = widget;
+        this.route.navigate(['../'], {relativeTo: this.activatedRoute});
       });
   }
 
@@ -43,6 +44,10 @@ export class WidgetImageComponent implements OnInit {
     this.widgetService.deleteWidget(this.wgid).subscribe(
       () => this.route.navigate(['../'], {relativeTo: this.activatedRoute})
     );
+  }
+
+  search() {
+    this.route.navigate(['./flickr'], {relativeTo: this.activatedRoute});
   }
 
   ngOnInit() {
@@ -53,7 +58,7 @@ export class WidgetImageComponent implements OnInit {
         this.pageID = params['pid'];
         this.wgid = params['wgid'];
         if (this.wgid === undefined) {
-          this.widget = new Widget(undefined, 'IMAGE', this.pageID, '', '', '', '');
+          this.widget = new Widget(undefined, 'IMAGE', this.pageID);
         } else {
           this.widgetService.findWidgetById(this.wgid).subscribe(
             (widget: Widget) => {

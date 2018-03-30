@@ -44,7 +44,7 @@
       </div>
     </div>
 
-    <div *ngSwitchCase="'YOUTUBE'">
+    <div *ngSwitchCase="'YOUTUBE'" class="youtube-widget">
       <!--<div class="embed-responsive embed-responsive-16by9">-->
 
         <a routerLink="." class="pull-right">
@@ -85,7 +85,16 @@
     <a routerLink="./{{widget._id}}" class="pull-right">
       <span class="glyphicon glyphicon-cog"></span>
     </a>
-    {{widget.text}}
+      <div *ngIf="widget.formatted">
+        <quill-editor [(ngModel)]="widget.text" name="text"></quill-editor>
+      </div>
+
+      <input *ngIf="!widget.formatted && (!widget.rows || widget.rows===1)"
+             placeholder="{{widget.placeholder}}" class="form-control"/>
+
+      <textarea *ngIf="!widget.formatted && (widget.rows > 1)"
+                rows="{{widget.rows}}" placeholder="{{widget.placeholder}}"
+                class="form-control">{{widget.text}}</textarea>
   </div>
 
   </div>
