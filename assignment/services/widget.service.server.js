@@ -1,129 +1,153 @@
-module.exports = function(app) {
+module.exports = function (app) {
+    var widgetModel = require("../model/widget/widget.model.server");
+    var path = require('path');
 
-  var multer = require('multer');
-  var upload = multer({ dest: __dirname+'/../../src/assets/uploads' });
-  var WidgetModel = require('../models/widget/widget.model.server');
+    var multer = require('multer'); // npm install multer --save
+    // var upload = multer({ dest: __dirname + '/../../src/assets/uploads' });
+    var upload = multer({ dest: __dirname + '/../uploads' });
 
-  //POST calls
-  app.post("/api/page/:pageId/widget", createWidget);
-  app.post ("/api/upload", upload.single('myFile'), uploadImage);
-  //Get calls
-  app.get("/api/page/:pageId/widget", findAllWidgetsForPage);
-  app.get("/api/widget/:widgetId", findWidgetById);
-  //Put calls
-  app.put("/api/widget/:widgetId", updateWidget);
-  app.put("/page/:pageId/widget", reSortWidget);
-  //delete calls
-  app.delete("/api/widget/:widgetId", deleteWidget);
+    // var baseUrl = "http://localhost:3100"; // for local
+    var baseUrl = ""; // for development
 
-//   var widgets = [
-//   {_id: '123', type: 'HEADER', pageId: '321',size:  '2', text:'GOP Releases Formerly Classified Memo Critical Of FBI' },
-//   {_id: '234', type: 'HEADER', pageId: '321',size: '4', text: 'It hints at a new GOP target: deputy attorney general' },
-//   {_id: '345', type: 'IMAGE', pageId: '321',size:  '2',text: 'text', width:'100%',
-//     url: 'https://media.fox5dc.com/media.fox5dc.com/photo/2018/02/01/trump_classified_1517500733623_4880181_ver1.0_640_360.jpg'},
-//   {_id: '456', type: 'HTML', pageId: '321',size: '2', text: '<p>blalbla</p>' },
-//   {_id: '567', type: 'HEADER', pageId: '321', size: '4', text: 'Memo asserts bias on part of FBI investigation in Russia probe'},
-//   {_id: '678', type: 'YOUTUBE', pageId: '321', size: '2',text:  'text', width: '100%', url: 'https://www.youtube.com/embed/I84wnvEqGXc'},
-// ];
+    app.post("/api/page/:pageId/widget", createWidget);
+    app.get("/api/page/:pageId/widget", findAllWidgetsForPage);
+    app.put("/api/page/:pageId/widget", reorderWidgets);
+    app.get("/api/widget/:widgetId", findWidgetById);
+    app.put("/api/widget/:widgetId", updateWidget);
+    app.delete("/api/widget/:widgetId", deleteWidget);
 
-  function createWidget(req, res) {
-    var pageId = req.params['pageId'];
-    var widget = req.body;
-    WidgetModel.createWidget(pageId,widget).then( function (widget) {
-      res.json(widget);
-    })
+    // UPLOAD
+    app.post("/api/upload", upload.single('myFile'), uploadImage);
+    app.get("/api/image/:imageName", findImage);
 
-  }
+    // widgets = [
+    //     { _id: "123", widgetType: "HEADER", name: ' ', pageId: "321", size: "2", text: "GIZMODO", url: "", width: "", height: 100, rows: 0, class: '', icon: '', deletable: false, formatted: false, placeholder: '' },
+    //     { _id: "234", widgetType: "HEADER", name: ' ', pageId: "321", size: "4", text: "Lorem ipsum", url: "", width: "", height: 100, rows: 0, class: '', icon: '', deletable: false, formatted: false, placeholder: '' },
+    //     // { _id: "345", widgetType: "IMAGE", pageId: "321", size: "", text: "", width: "100%", url: "http://lorempixel.com/400/200/" },
+    //     { _id: "456", widgetType: "HTML", name: 'html name', pageId: "321", size: "", text: "<p>Lorem ipsum</p>", url: "", width: "", height: 100, rows: 0, class: '', icon: '', deletable: false, formatted: false, placeholder: '' },
+    //     { _id: "567", widgetType: "HEADER", name: ' ', pageId: "321", size: "4", text: "Lorem ipsum", url: "", width: "", height: 100, rows: 0, class: '', icon: '', deletable: false, formatted: false, placeholder: '' },
+    //     { _id: "678", widgetType: "YOUTUBE", name: ' ', pageId: "321", size: "", text: "", url: "https://youtu.be/AM2Ivdi9c4E", width: "100%", height: 100, rows: 0, class: '', icon: '', deletable: false, formatted: false, placeholder: '' },
+    //     { _id: "789", widgetType: "HTML", name: 'html name', pageId: "321", size: "<p>Lorem ipsum</p>", text: "", url: "", width: "", height: 100, rows: 0, class: '', icon: '', deletable: false, formatted: false, placeholder: '' }
+    // ];
 
-  function findAllWidgetsForPage(req, res) {
-    var pageId = req.params['pageId'];
-    WidgetModel.findAllWidgetsForPage(pageId).then( function (widget) {
-      res.json(widget);
-    })
-}
+    function findImage(req, res) {
+        var imageName = req.params.imageName;
+        res.sendFile(path.resolve("./assignment/uploads/" + imageName));
+    }
 
-  function findWidgetById(req, res) {
-    var widgetId = req.params["widgetId"];
-    WidgetModel.findWidgetById(widgetId).then(function (widget) {
-      if (widget) {
-        res.status(200).send(widget);
-      } else {
-        res.status(404).send('findWidgetById Not Found');
-      }
-    });
-  }
+    function uploadImage(req, res) {
+        var widgetId = req.body.widgetId;
+        var width = req.body.width;
+        var myFile = req.file;
 
-  function updateWidget(req, res) {
-    var widgetId = req.params['widgetId'];
-    var widget = req.body;
-    WidgetModel.updateWidget(widgetId, widget).then(function (widget) {
-        if (widget) {
-          res.status(200).send(widget);
-        } else {
-          res.status(404).send('Update error');
+        var userId = req.body.userId;
+        var websiteId = req.body.websiteId;
+        var pageId = req.body.pageId;
+
+        // condition when myFile is null
+        if (myFile == null) {
+            res.redirect(baseUrl + "/user/" + userId + "/website/" + websiteId + "/page/" + pageId + "/widget/" + widgetId);
+            return;
         }
-      }
-    )
-  }
 
-  function deleteWidget(req, res) {
-    var widgetId = req.params['widgetId'];
-    WidgetModel.deleteWidget(widgetId).then(() => (
-      res.sendStatus(200)));
-  }
+        var originalname = myFile.originalname; // file name on user's computer
+        var filename = myFile.filename; // new file name in upload folder
+        var path = myFile.path; // full path of uploaded file
+        var destination = myFile.destination; // folder where file is saved to
+        var size = myFile.size;
+        var mimetype = myFile.mimetype;
 
-    function reSortWidget(req,res) {
-      var pageId = req.params.pageId;
-      var startIndex = parseInt(req.query["initial"]);
-      var endIndex = parseInt(req.query["final"]);
-      WidgetModel.reorderWidget(pageId, startIndex, endIndex)
-        .then(
-          function (page) {
-            res.sendStatus(200);
-          },
-          function (error) {
-            res.sendStatus(400).send(error);
-          }
-      )
+        // find widget by id
+        var imageUrl = baseUrl + "/api/image/" + filename;
+        var widget = { url: imageUrl };
+        widgetModel
+            .updateWidget(widgetId, widget)
+            .then(function (stats) {
+                res.send(200);
+            },
+                function (err) {
+                    res.sendStatus(404).send(err);
+                });
+
+        res.redirect(baseUrl + "/user/" + userId + "/website/" + websiteId + "/page/" + pageId + "/widget/" + widgetId);
     }
 
-  function uploadImage(req, res) {
-
-    var widgetId      = req.body.widgetId;
-    var width         = req.body.width;
-    var myFile        = req.file;
-    var userId = req.body.userId;
-    var websiteId = req.body.websiteId;
-    var pageId = req.body.pageId;
-
-    var originalname  = myFile.originalname; // file name on user's computer
-    var filename      = myFile.filename;     // new file name in upload folder
-    var path          = myFile.path;         // full path of uploaded file
-    var destination   = myFile.destination;  // folder where file is saved to
-    var size          = myFile.size;
-    var mimetype      = myFile.mimetype;
-
-    // find widget by id
-    if (widgetId === undefined) {
-      var widget = {_id: undefined, type: 'IMAGE', pageId: pageId,size: size,text: 'text', width:'100%',
-        url:'/uploads/'+filename};
-      WidgetModel.createWidget(pageId, widget)
-    } else {
-      var widget = { url: '/uploads/'+filename };
-      WidgetModel
-        .updateWidget(widgetId, widget)
-        .then(function (stats) {
-            res.send(200);
-          },
-          function (err) {
-            res.sendStatus(404).send(err);
-          });
+    function createWidget(req, res) {
+        var pageId = req.params.pageId;
+        var widget = req.body;
+        widgetModel.createWidget(pageId, widget).then(
+            function (widget) {
+                if (widget) {
+                    res.json(widget);
+                } else {
+                    res.sendStatus(400).send("Something went wrong");
+                }
+            },
+            function (err) {
+                res.sendStatus(400).send(err);
+            }
+        );
     }
 
+    function findAllWidgetsForPage(req, res) {
+        var pageId = req.params.pageId;
+        widgetModel.findAllWidgetsForPage(pageId).then(
+            function (widget) {
+                res.json(widget);
+            },
+            function (err) {
+                res.sendStatus(400).send(err);
+            }
+        );
+    }
 
+    function reorderWidgets(req, res) {
+        var pageId = req.params.pageId;
+        var startIndex = parseInt(req.query.initial);
+        var endIndex = parseInt(req.query.final);
 
-    var callbackUrl   = "/user/"+ userId+ "/website/" + websiteId + "/page/" + pageId+ "/widget";
-    res.redirect(callbackUrl);
-  }
+        widgetModel
+            .reorderWidgets(pageId, startIndex, endIndex)
+            .then(function (stats) {
+                res.sendStatus(200);
+            }, function (err) {
+                res.sendStatus(400).send(err);
+            });
+    }
+
+    function findWidgetById(req, res) {
+        var widgetId = req.params.widgetId;
+        widgetModel
+            .findWidgetById(widgetId)
+            .then(function (widget) {
+                res.json(widget);
+            },
+                function (err) {
+                    res.sendStatus(404).send(err);
+                });
+    }
+
+    function updateWidget(req, res) {
+        var widgetId = req.params.widgetId;
+        var updatedWidget = req.body;
+        widgetModel.updateWidget(widgetId, updatedWidget)
+            .then(function (stats) {
+                res.json(stats);
+            },
+                function (err) {
+                    res.sendStatus(404).send(err);
+                });
+    }
+
+    function deleteWidget(req, res) {
+        var widgetId = req.params.widgetId;
+        widgetModel.deleteWidget(widgetId).then(
+            function (stats) {
+                res.json(stats);
+            },
+            function (err) {
+                res.sendStatus(404).send(err);
+            }
+        );
+    }
 }
-
