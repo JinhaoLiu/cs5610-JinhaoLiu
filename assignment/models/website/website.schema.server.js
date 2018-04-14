@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 
-var PageSchema = require('../page/page.schema.server');
 var WebsiteSchema =mongoose.Schema({
   name: String,
   developId: {type: mongoose.Schema.Types.ObjectId, ref: 'UserModel'},

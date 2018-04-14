@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
-var WidgetSchema = require("./widget.schema.server");
-var PageModel = require("../page/page.model.server");
+var WidgetSchema = require("./widget.schema.server.js");
+var PageModel = require("../page/page.model.server.js");
 var WidgetModel = mongoose.model('WidgetModel', WidgetSchema);
 
 WidgetModel.createWidget = createWidget;
@@ -21,14 +21,12 @@ function createWidget(pageId, Widget) {
         .then(function(page){
           page.widgets.push(responseWidget);
           return page.save();
-        })
+        });
       return responseWidget;
     });
 }
 
 function findAllWidgetsForPage(pageId) {
-  // return WidgetModel.find({'pageId' : pageId})
-  //   .populate('pageId').exec();
   return PageModel
     .findPageById(pageId)
     .populate('widgets')
@@ -61,7 +59,7 @@ function deleteWidget(widgetId) {
 function reorderWidget(pageId, start, end) {
   return PageModel.findPageById(pageId).then(
     function(page) {
-        page.widgets.splice(end, 0, page.widgets.splice(start, 1)[0]);
+      page.widgets.splice(end, 0, page.widgets.splice(start, 1)[0]);
       return page.save();
     }
   )

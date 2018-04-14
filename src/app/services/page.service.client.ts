@@ -1,51 +1,65 @@
-
-import {Injectable} from '@angular/core';
-import {Http, Response} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Http, RequestOptions, Response } from '@angular/http';
 import 'rxjs/Rx';
-import {environment} from '../../environments/environment';
-import {Page} from '../models/page.model.client';
+import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
 
-
+// injecting service into module
 @Injectable()
+
 export class PageService {
-  constructor(private http: Http) {}
 
-  baseURL = environment.baseUrl;
+  constructor(private http: Http) { }
 
-  dumpPage() {
-    return new Page(undefined, undefined, undefined, undefined);
-  }
+  api = {
+    'createPage'   : this.createPage,
+    'findPageByWebsiteId' : this.findPageByWebsiteId,
+    'findPageById' : this.findPageById,
+    'updatePage' : this.updatePage,
+    'deletePage' : this.deletePage
+  };
 
-  createPage(websiteId: String, page: Page) {
-    const url = this.baseURL + '/api/website/' + websiteId + '/page';
-    return this.http.post(url, page)
-      .map((response: Response) => {
-        return response.json();
-      });
-  }
+  baseUrl = environment.baseUrl;
 
-  findAllPagesForWebsite(websiteId: String) {
-    const url = this.baseURL + '/api/website/' + websiteId + '/page';
-    return this.http.get(url).map((response: Response) => {
+  createPage(userId, websiteId, page)  {
+    const url = this.baseUrl + '/api/user/' + userId + '/website/' + websiteId + '/page';
+    return this.http.post(url, page).map((response: Response) => {
       return response.json();
     });
   }
 
-  findPagesById(pageId: String) {
-    return this.http.get(this.baseURL + '/api/page/' + pageId).map((response: Response) => {
-      return response.json();
-    });
+  findPageByWebsiteId(userId, websiteId)   {
+    const url = this.baseUrl + '/api/user/' + userId + '/website/' + websiteId + '/page';
+    return this.http.get(url)
+      .map(
+        (res: Response) => {
+          const data = res.json();
+          return data;
+        }
+      );
   }
 
-  updatePage(pageId: String, page: Page) {
-    const url =  this.baseURL + '/api/page/' + pageId;
+  findPageById(userId, websiteId, pageId)    {
+    const url = this.baseUrl + '/api/user/' + userId + '/website/' + websiteId + '/page/' + pageId;
+    return this.http.get(url)
+      .map(
+        (res: Response) => {
+          const data = res.json();
+          return data;
+        }
+      );
+  }
+
+  updatePage(userId, websiteId, pageId, page)   {
+    const url =  this.baseUrl + '/api/user/' + userId + '/website/' + websiteId + '/page/' + pageId;
     return this.http.put(url, page).map((response: Response) => {
       return response.json();
     });
   }
 
-  deletePage(pageId: String) {
-    const url =  this.baseURL + '/api/page/' + pageId;
+  deletePage(userId, websiteId, pageId)   {
+    const url =  this.baseUrl + '/api/user/' + userId + '/website/' + websiteId + '/page/' + pageId;
     return this.http.delete(url);
   }
+
 }
