@@ -1,0 +1,61 @@
+<nav class="navbar navbar-fixed-top cl-blue-navbar">
+  <a class="cl-text-white navbar-brand cl-text-bold" href="#">
+    Profile
+  </a>
+  <a routerLink="/user/{{user._id}}/website" class="navbar-link navbar-text pull-right cl-text-white cl-icon-padding">
+    <span class="glyphicon glyphicon-plus"></span>
+  </a>
+  <a class="navbar-link navbar-text pull-right cl-text-white cl-icon-padding">
+    <button class="glyphicon glyphicon-ok"(click)="f.ngSubmit.emit()" [hidden]="!f.valid" [disabled]="!f.valid"></button>
+  </a>
+</nav>
+
+<div class="container">
+<form (ngSubmit)="updateUser(user)" #f="ngForm">
+<div class="form-group">
+  <label for="name">UserName</label>
+  <input placeholder="username" type="text" class="form-control" id="name"
+         [(ngModel)]="user.username" required
+         name="username"/>
+</div>
+
+<div class="form-group">
+  <label for="password">PassWord</label>
+  <input placeholder="password" type="text"  class="form-control" id="password"
+         [(ngModel)]="user.password" required
+         name="password"/>
+</div>
+
+  <div class="form-group">
+    <label for="first-name">First Name</label>
+    <input placeholder="firstname" type="text" class="form-control" id="first-name"
+           [(ngModel)]="user.firstName" required
+           name="firstName"/>
+  </div>
+
+  <div class="form-group">
+    <label for="last-name">Last Name</label>
+    <input placeholder="lastname" type="text" class="form-control" id="last-name"
+           [(ngModel)]="user.lastName" required
+           name="lastName"/>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input placeholder="email" type="text" class="form-control" id="email"
+           [(ngModel)]="user.email" required
+           name="email" />
+  </div>
+
+  <div class="form-group">
+    <label for="phone">Phone</label>
+    <input placeholder="phone" type="text" class="form-control" id="phone"
+           [(ngModel)]="user.phone" required
+           name="phone" />
+  </div>
+
+  <button class="btn btn-primary btn-block" type="button" (click)="deleteUser(user)">Delete</button>
+  <button class="btn btn-success btn-block" type="button" routerLink="./website">Website</button>
+  <button class="btn btn-danger btn-block" type="button" (click)="logout()">Logout</button>
+</form>
+</div>
