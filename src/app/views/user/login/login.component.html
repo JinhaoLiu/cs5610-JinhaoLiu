@@ -13,7 +13,7 @@
   <input placeholder="username" type="text" class="form-control" id="name"
          [(ngModel)]="username" required
          name="username"/>
-  <div [hidden]="username.valid || username.untouched"
+  <div [hidden]="username.untouched || username.valid "
        class="alert alert-danger">
     Name is required
   </div>
@@ -26,7 +26,11 @@
           name="password"/>
 </div>
 
-    <button class="btn btn-primary btn-block" type="submit" [disabled]="!f.valid">Login</button>
+      <a href="https://cs5610-webdev-yuxinhan.herokuapp.com/facebook/login" class="btn btn-primary btn-block">
+        <span class="fa fa-facebook"></span>
+        Facebook
+      </a>
+      <button class="btn btn-primary btn-block" type="submit" [disabled]="!f.valid">Login</button>
   <button class="btn btn-success btn-block" type="button" (click)="register()">Register</button>
     </form>
   </div>

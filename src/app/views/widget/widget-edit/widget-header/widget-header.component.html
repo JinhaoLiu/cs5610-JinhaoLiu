@@ -27,12 +27,20 @@
       <input type="text" class="form-control" id="heading-text" placeholder={{widget.text}}
       ngModel required
       name="text" #text="ngModel"/>
+      <div [hidden]="text.valid || text.untouched"
+           class="alert alert-danger">
+        Text is required
+      </div>
     </div>
     <div class="form-group">
       <label for="heading-size">Size</label>
       <input type="text" class="form-control" id="heading-size" placeholder={{widget.size}}
       ngModel required
       name="size" #size="ngModel"/>
+      <div [hidden]="size.valid || size.untouched"
+           class="alert alert-danger">
+        Size is required
+      </div>
     </div>
     <div *ngIf="sizeValid" class="alert alert-danger">
       Size can only between 1 to 6

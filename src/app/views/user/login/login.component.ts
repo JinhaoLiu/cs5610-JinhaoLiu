@@ -3,6 +3,8 @@ import {Router} from '@angular/router';
 import {NgForm} from '@angular/forms';
 import {UserService} from '../../../services/user.service.client';
 import {User} from '../../../models/user.model.client';
+import {SharedService} from '../../../services/shared.service';
+import {environment} from '../../../../environments/environment';
 
 
 @Component({
@@ -16,13 +18,15 @@ export class LoginComponent implements OnInit {
   passname: String;
   errorFlag: boolean;
   errorMsg = 'Invalid username or password !';
+  baseUrl = environment.baseUrl;
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router, private sharedService: SharedService) { }
   login() {
-    this.userService.findUserByCredential(this.username, this.passname)
-      .subscribe((user: User) => {
+    this.userService.login(this.username, this.passname)
+      .subscribe((user: any) => {
+          this.sharedService.user = user;
           this.errorFlag = false;
-          this.router.navigate(['/user', user._id]); },
+          this.router.navigate(['/profile']); },
         (error: any) => {
           this.errorFlag = true;
         });
@@ -33,5 +37,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
   }
+
 
 }

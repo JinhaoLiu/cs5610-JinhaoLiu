@@ -25,6 +25,10 @@
     <div class="form-group">
       <label for="heading-text">Text</label>
       <input [(ngModel)]="widget.text" name="text" class="form-control" id="heading-text"/>
+      <div [hidden]="text.valid || text.untouched"
+           class="alert alert-danger">
+        Text is required
+      </div>
     </div>
     <div class="form-group">
       <label for="heading-rows">Rows</label>

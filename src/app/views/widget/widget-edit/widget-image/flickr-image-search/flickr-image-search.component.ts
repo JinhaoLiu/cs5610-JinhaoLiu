@@ -3,6 +3,7 @@ import {FlickrService} from '../../../../../services/flickr.service.client';
 import {WidgetService} from '../../../../../services/widget.service.client';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Widget} from '../../../../../models/widget.model.client';
+import {SharedService} from '../../../../../services/shared.service';
 
 @Component({
   selector: 'app-flickr-image-search',
@@ -23,12 +24,13 @@ export class FlickrImageSearchComponent implements OnInit {
   constructor(private flickrService: FlickrService,
               private widgetService: WidgetService,
               private router: Router,
-              private activatedRoute: ActivatedRoute) { }
+              private activatedRoute: ActivatedRoute,
+              private sharedService: SharedService) { }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(
       (params: any) => {
-        this.userId = params['uid'];
+        this.userId = this.sharedService.user['_id'];
         this.websiteId = params['wid'];
         this.pageId = params['pid'];
         this.widgetId = params['wgid'];

@@ -32,6 +32,10 @@
       <input type="text" class="form-control" id="image-text" placeholder={{widget.type}}
              ngModel required
              name="text" #text="ngModel"/>
+      <div [hidden]="text.valid || text.untouched"
+           class="alert alert-danger">
+        Type is required
+      </div>
     </div>
     <div class="form-group">
       <label for="image-URL">URL</label>

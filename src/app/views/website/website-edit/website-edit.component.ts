@@ -4,6 +4,7 @@ import {Website} from '../../../models/website.model.client';
 import {WebsiteService} from '../../../services/website.service.client';
 import {NgForm} from '@angular/forms';
 import {relativeToRootDirs} from '@angular/compiler-cli/src/transformers/util';
+import {SharedService} from '../../../services/shared.service';
 
 @Component({
   selector: 'app-website-edit',
@@ -17,7 +18,8 @@ export class WebsiteEditComponent implements OnInit {
   website: Website;
   userId: String;
   websites: Website[] = [];
-  constructor(private websiteService: WebsiteService, private activatedRoute: ActivatedRoute, private router: Router) { }
+  constructor(private websiteService: WebsiteService, private activatedRoute: ActivatedRoute, private router: Router,
+              private sharedService: SharedService) { }
 
   deleteWeb() {
     this.websiteService.deleteWebsite(this.wid).subscribe(
@@ -40,9 +42,10 @@ export class WebsiteEditComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getUser();
     this.activatedRoute.params.subscribe(
       (params: any) => {
-        this.userId = params['_id'];
+
         this.websiteService.findAllWebsitesForUser(this.userId).subscribe(
         (websites: Website[]) => {
          this.websites = websites;
@@ -57,6 +60,11 @@ export class WebsiteEditComponent implements OnInit {
         }
       );
       });
+  }
+
+  getUser() {
+    // this.user = JSON.parse(localStorage.getItem("user"));
+    this.userId = this.sharedService.user['_id'];
   }
 
 }

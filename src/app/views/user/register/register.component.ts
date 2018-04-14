@@ -27,16 +27,23 @@ export class RegisterComponent implements OnInit {
     this.verifypw = this.registerForm.value.verifypw;
     if (this.password !== this.verifypw) {
       this.pwErrorFlag = true;
+      return;
     }
     // if (this.userService.findUserByCredential(this.username, this.password)) {
     //   this.userErrorFlag = true;
     // }
     this.user.username = this.username;
     this.user.password = this.password;
-    this.userService.createUser(this.user).subscribe((user: User) => {
-      this.user = user;
-      this.router.navigate(['/user', this.user._id]);
-    });
+    this.userService.register(this.username, this.password)
+      .subscribe(
+        (data: any) => {
+          this.router.navigate(['/profile']);
+        }
+      );
+    // this.userService.createUser(this.user).subscribe((user: User) => {
+    //   this.user = user;
+    //   this.router.navigate(['/user', this.user._id]);
+    // });
 
   }
   login() {
