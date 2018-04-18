@@ -1,0 +1,67 @@
+<div class="container">
+  <div *ngIf="errorFlag"
+       class="alert alert-danger">
+    {{ errorMsg }}
+  </div>
+  <h1>Register</h1>
+  <form (ngSubmit)="onSubmit()" #f="ngForm">
+    <input type="text"
+           class="form-control"
+           placeholder="username"
+           required
+           ngModel
+           name="username"
+           #username="ngModel"
+           />
+    <div class="alert alert-danger" *ngIf="!username.valid && username.touched">
+      Please enter username!
+    </div>
+    <input type="text"
+           class="form-control"
+           placeholder="firstName"
+           required
+           ngModel
+           name="firstName"
+           #firstName="ngModel"
+    />
+    <div class="alert alert-danger" *ngIf="!firstName.valid && firstName.touched">
+      Please enter firstName!
+   </div>
+    <input type="text"
+           class="form-control"
+           placeholder="lastName"
+           required
+           ngModel
+           name="lastName"
+           #lastName="ngModel"
+    />
+    <div class="alert alert-danger" *ngIf="!lastName.valid && lastName.touched">
+      Please enter lastName!
+   </div>
+    <input type="password"
+           class="form-control"
+           placeholder="password"
+           required
+           ngModel
+           name="password"
+           #password="ngModel"/>
+    <div class="alert alert-danger" *ngIf="!password.valid && password.touched">
+      Please enter password!
+   </div>
+    <input type="password"
+           class="form-control"
+           placeholder="verify password"
+           required
+           ngModel
+           name="verifyPassword"
+           #verifyPassword="ngModel"/>
+    <div class="alert alert-danger" *ngIf="!verifyPassword.valid && verifyPassword.touched">
+      Please verify password!
+   </div>
+    <button class="btn btn-primary btn-block"
+            type="submit"
+            [disabled]="!f.valid">Register</button>
+    <a class="btn btn-danger  btn-block"
+            (click)="login()" >Cancel</a>
+  </form>
+</div>
