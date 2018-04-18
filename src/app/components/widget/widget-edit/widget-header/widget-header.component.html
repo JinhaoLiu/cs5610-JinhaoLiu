@@ -1,0 +1,64 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid row">
+
+    <div class="navbar-text pull-left">
+      <a [routerLink]="['/user', 'website', websiteId, 'page', pageId, 'widget']" class="cl-text-black cl-icon-padding">
+          <span class="glyphicon glyphicon-chevron-left">
+          </span>
+      </a>
+    </div>
+    <div class="navbar-text pull-right">
+      <a  class="cl-icon-padding cl-text-black" (click)="onSubmit()">
+          <span class="glyphicon glyphicon-ok">
+          </span>
+      </a>
+    </div>
+    <a class="navbar-brand cl-text-white cl-text-bold">
+      Widgets Edit
+    </a>
+  </div>
+</nav>
+
+<div class="container">
+  <div *ngIf="errorFlag"
+       class="alert alert-danger">
+    {{errorMsg}}
+  </div>
+  <form #f="ngForm">
+    <div class="form-group">
+      <label for="heading-name">Name</label>
+      <input type="text" class="form-control" id="heading-name" placeholder="Name" name="name" ngModel #name="ngModel" required [(ngModel)]="widget.name">
+      <div class="alert alert-danger" *ngIf="!name.valid && name.touched">
+        Please enter Widget Name!
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="heading-text">Text</label>
+      <input type="text" class="form-control" id="heading-text" placeholder="Text" name="text" ngModel #text="ngModel" required [(ngModel)]="widget.text">
+      <div class="alert alert-danger" *ngIf="!text.valid && text.touched">
+        Please enter Widget Text!
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="heading-size">Size</label>
+      <input type="number" class="form-control" id="heading-size" placeholder="3" name="size" ngModel #size="ngModel" required [(ngModel)]="widget.size" min="1" max="6">
+      <div class="alert alert-danger" *ngIf="!size.valid && size.touched">
+        Please enter Widget Size (1 ~ 6)!
+      </div>
+    </div>
+  </form>
+  <a class="btn btn-danger  btn-block" (click)="onDelete()" >Delete</a>
+</div>
+
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <div class="container-fluid row">
+    <div class="pull-right navbar-text">
+
+      <a [routerLink]="['/profile']" class="cl-icon-padding">
+        <span class="glyphicon glyphicon-user"></span>
+      </a>
+
+    </div>
+  </div>
+</nav>
+
