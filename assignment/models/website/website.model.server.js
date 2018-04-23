@@ -1,8 +1,8 @@
 var mongoose = require("mongoose");
-var WebsiteSchema = require("./website.schema.server.js");
+var WebsiteSchema = require("./website.schema.server");
 var WebsiteModel = mongoose.model('WebsiteModel', WebsiteSchema);
 
-var UserModel = require("../user/user.model.server.js");
+var UserModel = require("../user/user.model.server");
 
 WebsiteModel.findWebsitesForUser = findWebSitesForUser;
 WebsiteModel.createWebsiteForUser = createWebsiteForUser;
@@ -14,13 +14,16 @@ module.exports = WebsiteModel;
 
 function findWebSitesForUser(userId){
   return WebsiteModel.find({"developId": userId})
+  //.populate('developerId')
     .populate('developId', 'username')
     .exec();
 }
 
 function createWebsiteForUser(userId, website){
+  // console.log("this is from userId " + userId);
   return WebsiteModel.create(website)
     .then(function(responseWebsite){
+      // console.log("this is from website " + responseWebsite.developId);
       UserModel.findUserById(website.developId)
         .then(function(user){
           user.websites.push(responseWebsite);

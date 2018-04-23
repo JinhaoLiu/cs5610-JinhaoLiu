@@ -1,5 +1,7 @@
 var mongoose = require("mongoose");
 
+var WidgetSchema = require("../widget/widget.schema.server")
+
 var PageSchema = mongoose.Schema({
   name: String,
   title: String,
