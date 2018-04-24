@@ -1,10 +1,13 @@
 var mongoose = require('mongoose');
 
 var WidgetSchema = mongoose.Schema({
-  pageId: {type: mongoose.Schema.Types.ObjectId, ref: 'PageModel'},
-  type:{
+  _page: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PageModel'
+  },
+  type: {
     type: String,
-    enum : ['HEADING', 'IMAGE', 'YOUTUBE', 'HTML', 'TEXT'],
+    enum: ['HEADER', 'IMAGE', 'YOUTUBE', 'HTML', 'TEXT']
   },
   name: String,
   text: String,
@@ -17,12 +20,13 @@ var WidgetSchema = mongoose.Schema({
   size: Number,
   class: String,
   icon: String,
-  deleteable: Boolean,
+  deletable: Boolean,
   formatted: Boolean,
-  dateCreated:{
-    type:Date,
-    default:Date.now()
+  position: Number,
+  dateCreated: {
+    type: Date,
+    default: Date.now
   }
-},{collection: 'widget'});
+}, { collection: 'widget' });
 
 module.exports = WidgetSchema;

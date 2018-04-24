@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
-var UserSchema = require("./user.schema.server.js");
+var UserSchema = require("./user.schema.server");
 var UserModel = mongoose.model("UserModel", UserSchema);
+
 UserModel.findUserById = findUserById;
 UserModel.createUser = createUser;
 UserModel.findAllUsers = findAllUsers;
@@ -8,41 +9,40 @@ UserModel.findUserByCredentials = findUserByCredentials;
 UserModel.findUserByUserName = findUserByUserName;
 UserModel.updateUser = updateUser;
 UserModel.deleteUser = deleteUser;
-UserModel.findFacebookUser=findFacebookUser;
+UserModel.findUserByFacebookId = findUserByFacebookId;
 
 module.exports = UserModel;
 
-function updateUser(userId, user){
-  return UserModel.update({_id: userId}, user );
+function updateUser(userId, user) {
+  return UserModel.findByIdAndUpdate(userId, user);
 }
 
-function findUserByUserName(username){
+function findUserByUserName(username) {
   return UserModel.findOne({username: username});
 }
 
-function findUserByCredentials(username, password){
+function findUserByCredentials(username, password) {
   return UserModel.findOne({username: username, password: password});
 }
 
-function createUser(user){
+function createUser(user) {
+  console.log('user model user create username= ' + user.username);
+  console.log('user model user create password= ' + user.password);
   return UserModel.create(user);
 }
 
-function findAllUsers(){
-  UserModel.find(function (err, doc) {
-    console.log(docs);
-  })
+function findAllUsers() {
+  return UserModel.find({});
 }
 
-function findUserById(userId){
+function findUserById(userId) {
   return UserModel.findById(userId);
 }
 
 function deleteUser(userId) {
-  return UserModel.remove({_id: userId});
+  return UserModel.findByIdAndRemove(userId);
 }
 
-function findFacebookUser(id) {
-  return UserModel.findOne({"facebook.id": id});
+function findUserByFacebookId(facebookId) {
+  return UserModel.findOne({'facebook.id': facebookId});
 }
-

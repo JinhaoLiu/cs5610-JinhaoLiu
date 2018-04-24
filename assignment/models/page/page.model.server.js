@@ -1,9 +1,7 @@
 var mongoose = require("mongoose");
-var PageSchema = require("./page.schema.server.js");
-var WebsiteModel = require("../website/website.model.server.js")
-
-var PageModel = mongoose.model('PageModel', PageSchema);
-
+var PageSchema = require("./page.schema.server");
+var PageModel = mongoose.model("PageModel", PageSchema);
+var websiteModel = require("../website/website.model.server");
 PageModel.createPage = createPage;
 PageModel.findAllPagesForWebsite = findAllPagesForWebsite;
 PageModel.findPageById = findPageById;
@@ -12,39 +10,48 @@ PageModel.deletePage = deletePage;
 
 module.exports = PageModel;
 
+// function createPage(websiteId, page) {
+//   page._websiteId= websiteId;
+//   return PageModel.create(page)
+//     .then(function(responsePage){
+//       websiteModel.findWebsiteById(websiteId)
+//         .then(function(website){
+//           website.pages.push(responsePage);
+//           console.log(website)
+//           return website.save();
+//         });
+//       return responsePage;
+//     });
+// }
+
 function createPage(websiteId, page) {
   return PageModel.create(page)
-    .then(function(responsePage){
-      WebsiteModel.findWebisteById(responsePage.websiteId)
-        .then(function(website){
-          website.pages.push(responsePage);
-          return website.save();
-        });
-      return responsePage;
-    });
+  //.then(function()
 }
 
+// function createPage(websiteId, page) {
+//   page._website = websiteId;
+//   return Page.create(page);
+// }
+
+
 function findAllPagesForWebsite(websiteId) {
-  return PageModel.find({'websiteId' : websiteId})
-    .populate('websiteId').exec();
+  return PageModel.find({_websiteId: websiteId})
 }
+
+// this one does not work
+// function findPageById(pageId) {
+//   return PageModel.find({_id: pageId})
+// }
 
 function findPageById(pageId) {
   return PageModel.findById(pageId);
 }
 
-function updatePage(pageId, page){
+function updatePage(pageId, page) {
   return PageModel.update({_id: pageId}, page);
 }
 
 function deletePage(pageId) {
-  page = PageModel.findPageById(pageId)
-    .then(function (page) {
-      WebsiteModel.findWebisteById(page.websiteId)
-        .then(function (website) {
-          website.pages.pull({_id : pageId});
-          website.save();
-        })
-    });
-  return PageModel.remove({_id: pageId});
+  return PageModel.findByIdAndRemove(pageId);
 }

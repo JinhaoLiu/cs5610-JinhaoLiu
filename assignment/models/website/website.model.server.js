@@ -1,32 +1,30 @@
 var mongoose = require("mongoose");
-var WebsiteSchema = require("./website.schema.server.js");
+var WebsiteSchema = require("./website.schema.server");
 var WebsiteModel = mongoose.model('WebsiteModel', WebsiteSchema);
 
-var UserModel = require("../user/user.model.server.js");
+var userModel = require("../user/user.model.server");
 
+WebsiteModel.createWebsite = createWebsite;
 WebsiteModel.findWebsitesForUser = findWebSitesForUser;
-WebsiteModel.createWebsiteForUser = createWebsiteForUser;
-WebsiteModel.findWebisteById = findWebsiteById;
 WebsiteModel.updateWebsite = updateWebsite;
+WebsiteModel.findWebsiteById = findWebsiteById;
 WebsiteModel.deleteWebsite = deleteWebsite;
-
 module.exports = WebsiteModel;
 
 function findWebSitesForUser(userId){
-  return WebsiteModel.find({"developId": userId})
-    .populate('developId', 'username')
+  return WebsiteModel.find({"developerId": userId})
+    .populate('developerId', 'username')
     .exec();
 }
 
-function createWebsiteForUser(userId, website){
+function createWebsite(website){
   return WebsiteModel.create(website)
     .then(function(responseWebsite){
-      UserModel.findUserById(website.developId)
+      userModel.findUserById(website.developerId)
         .then(function(user){
           user.websites.push(responseWebsite);
           return user.save();
-        });
-      return responseWebsite;
+        })
     });
 }
 
@@ -35,15 +33,9 @@ function findWebsiteById(websiteId) {
 }
 
 function updateWebsite(websiteId, website) {
-  return WebsiteModel.update({_id: websiteId},website );
+  return WebsiteModel.update({_id: websiteId}, website);
 }
 
 function deleteWebsite(websiteId) {
-  website = WebsiteModel.findWebisteById(websiteId).then(function(website) {
-    UserModel.findUserById(website.developId).then(function(user){
-      user.websites.pull({_id: websiteId});
-      user.save();
-    })
-  });
   return WebsiteModel.remove({_id: websiteId});
 }

@@ -1,7 +1,5 @@
-var mongoose = require("mongoose");
-
-var WidgetSchema = require("./widget.schema.server.js");
-var PageModel = require("../page/page.model.server.js");
+var mongoose = require('mongoose');
+var WidgetSchema = require('./widget.schema.server');
 var WidgetModel = mongoose.model('WidgetModel', WidgetSchema);
 
 WidgetModel.createWidget = createWidget;
@@ -9,58 +7,90 @@ WidgetModel.findAllWidgetsForPage = findAllWidgetsForPage;
 WidgetModel.findWidgetById = findWidgetById;
 WidgetModel.updateWidget = updateWidget;
 WidgetModel.deleteWidget = deleteWidget;
-WidgetModel.reorderWidget = reorderWidget;
+WidgetModel.reorderWidgets = reorderWidgets;
+WidgetModel.resetWidgets = resetWidgets;
 
 module.exports = WidgetModel;
 
-function createWidget(pageId, Widget) {
-
-  return WidgetModel.create(Widget)
-    .then(function(responseWidget){
-      PageModel.findPageById(responseWidget.pageId)
-        .then(function(page){
-          page.widgets.push(responseWidget);
-          return page.save();
-        });
-      return responseWidget;
-    });
+function createWidget(pageId, widget) {
+  widget._page = pageId;
+  return WidgetModel.create(widget);
 }
 
 function findAllWidgetsForPage(pageId) {
-  return PageModel
-    .findPageById(pageId)
-    .populate('widgets')
-    .then(
-      function (page) {
-        // console.log(page.widgets);
-        return page.widgets;
-      }
-    )
+  return WidgetModel.find({ _page: pageId });
 }
 
 function findWidgetById(widgetId) {
   return WidgetModel.findById(widgetId);
 }
 
-function updateWidget(widgetId, widget){
-  return WidgetModel.update({_id: widgetId}, widget);
+function updateWidget(widgetId, widget) {
+  return WidgetModel.findByIdAndUpdate(widgetId, widget);
 }
 
 function deleteWidget(widgetId) {
-  widget = WidgetModel.findWidgetById(widgetId).then(function(widget) {
-    PageModel.findPageById(widget.pageId).then(function(page){
-      page.widgets.pull({_id: widgetId});
-      page.save();
-    })
+  WidgetModel.findById(widgetId, function (err, foundWidget) {
+    var index = foundWidget.position;
+    resetWidgets(index, foundWidget._page);
   });
-  return WidgetModel.remove({_id: widgetId});
+  return WidgetModel.findByIdAndRemove(widgetId);
 }
 
-function reorderWidget(pageId, start, end) {
-  return PageModel.findPageById(pageId).then(
-    function(page) {
-      page.widgets.splice(end, 0, page.widgets.splice(start, 1)[0]);
-      return page.save();
-    }
-  )
+function resetWidgets(index, pageId) {
+  WidgetModel.find({ _page: pageId }, function (err, widgets) {
+    widgets.forEach(function (widget) {
+      if (widget.position > index) {
+        widget.position--;
+        widget.save();
+      }
+    })
+  })
+}
+
+//weile shenme
+function reorderWidgets(pageId, start, end) {
+  return WidgetModel.find({ _page: pageId }, function (err, widgets) {
+    widgets.forEach(function (widget) {
+      if (start < end) {
+        if (widget.position === start) {
+          widget.position = end;
+          widget.save();
+        } else if (widget.position > start
+          && widget.position <= end) {
+          widget.position--;
+          widget.save();
+        } else {
+          if (widget.position === start) {
+            widget.position = end;
+            widget.save();
+          } else if (widget.position < start
+            && widget.position >= end) {
+            widget.position++;
+            widget.save();
+          }
+        }
+      }
+
+      if (start > end) {
+        if (widget.position === start) {
+          widget.position = end;
+          widget.save();
+        } else if (widget.position < start
+          && widget.position >= end) {
+          widget.position++;
+          widget.save();
+        } else {
+          if (widget.position === start) {
+            widget.position = end;
+            widget.save();
+          } else if (widget.position > start
+            && widget.position <= end) {
+            widget.position--;
+            widget.save();
+          }
+        }
+      }
+    })
+  })
 }

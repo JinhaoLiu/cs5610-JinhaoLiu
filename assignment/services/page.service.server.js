@@ -1,77 +1,176 @@
-
 module.exports = function (app) {
+  app.post("/api/website/:websiteId/page", createPage);
+  app.get("/api/website/:websiteId/page", findAllPagesForWebsite);
+  app.get("/api/page/:pageId", findPageById);
+  app.put("/api/page/:pageId", updatePage);
+  app.delete("/api/page/:pageId", deletePage);
 
-  var PageModel = require("../models/page/page.model.server.js");
+  // pages = [
+  //   {_id: "321", name: "Post 1", websiteId: "456", title: "Lorem"},
+  //   {_id: "432", name: "Post 2", websiteId: "456", title: "Lorem"},
+  //   {_id: "543", name: "Post 3", websiteId: "456", title: "Lorem"}
+  // ];
 
-  app.post("/api/user/:userId/website/:websiteId/page", createPage);
-  app.get("/api/user/:userId/website/:websiteId/page", findAllPagesForWebsite);
-  app.get("/api/user/:userId/website/:websiteId/page/:pageId", findPageById);
-  app.put("/api/user/:userId/website/:websiteId/page/:pageId", updatePage);
-  app.delete("/api/user/:userId/website/:websiteId/page/:pageId", deletePage);
+  var pageModel = require("../models/page/page.model.server");
 
-  var PAGES = [
-    { "_id": "321", "name": "Post 1", "websiteId": "456", "title": "Lorem" },
-    { "_id": "432", "name": "Post 2", "websiteId": "456", "title": "Lorem" },
-    { "_id": "543", "name": "Post 3", "websiteId": "456", "title": "Lorem" },
-    { "_id": "234", "name": "Post 4", "websiteId": "567", "title": "Lorem" },
-    { "_id": "123", "name": "Post 5", "websiteId": "567", "title": "Lorem" }
-  ];
-
-  function createPage(req, res){
-    var websiteId = req.params['websiteId'];
-    var page = req.body;
-    PageModel.createPage(websiteId, page).then((page) => (res.json(page)));
-  }
+  // function findAllPagesForWebsite(req, res) {
+  //   console.log('server side find all page for website');
+  //   var websiteId = req.params.websiteId;
+  //   var resultSet = [];
+  //   for (var i = 0; i < pages.length; i++) {
+  //     if (pages[i].websiteId === websiteId) {
+  //       resultSet.push(pages[i]);
+  //     }
+  //   }
+  //   res.json(resultSet);
+  // }
 
   function findAllPagesForWebsite(req, res) {
-    var websiteId = req.params['websiteId'];
-    PageModel.findAllPagesForWebsite(websiteId).then((pages) => (res.json(pages)));
-  }
-
-  function findPageById(req, res){
-    var pageId = req.params['pageId'];
-    PageModel.findPageById(pageId).then(function (foundPage) {
-      if (foundPage){
-        res.json(foundPage);
-      } else {
-        res.status(401);
-        res.json(foundPage);
+    console.log('server side find all page for website');
+    var websiteId = req.params.websiteId;
+    pageModel.findAllPagesForWebsite(websiteId).then(
+      function (page) {
+        res.json(page);
+      },
+      function (err) {
+        res.sendStatus(400).send(err);
       }
-    });
+    );
   }
 
-  function updatePage(req, res){
-    var pageId = req.params['pageId'];
-    var newPage = req.body;
-    PageModel.updatePage(pageId, newPage).then((page) => (res.json(page)));
+  function createPage(req, res) {
+    var websiteId = req.params.websiteId;
+    var page = req.body;
+    console.log(page);
+    page._websiteId = websiteId;
+    pageModel.createPage(websiteId, page)
+      .then(function (response) {
+        console.log('response= ' + response);
+        res.status(200).send(response);
+      });
   }
 
+  // function createPage(req, res) {
+  //   var websiteId = req.params.websiteId;
+  //   var page = req.body;
+  //   pageModel.createPage(websiteId, page).then(
+  //     function (page) {
+  //       if (page) {
+  //         res.json(page);
+  //       } else {
+  //         res.sendStatus(400).send("Something went wrong");
+  //       }
+  //     },
+  //     function (err) {
+  //       res.sendStatus(400).send(err);
+  //     }
+  //   );
+  // }
 
+  // function deletePage(req, res) {
+  //   console.log('server side delete page');
+  //   var pageId = req.params.pageId;
+  //   for (var i = 0; i < pages.length; i++) {
+  //     if (pages[i]._id === pageId) {
+  //       res.json(pages[i]);
+  //       pages.splice(i, 1);
+  //       return;
+  //     }
+  //   }
+  //   res.status(404).send("Cannot find page");
+  // }
 
-  function deletePage(req, res){
-    var pageId = req.params['pageId'];
-    PageModel.deletePage(pageId).then(() => (
-      res.sendStatus(200)));
-    res.send("success");
-  }
+  // function deletePage(req, res) {
+  //   console.log('server side delete page');
+  //   var pageId = req.params.pageId;
+  //   pageModel.deletePage(pageId)
+  //     .then(function (response) {
+  //       res.send(200).json(response);
+  //     }, function (err) {
+  //       console.log(err);
+  //       res.send(500);
+  //     });
+  // }
 
-
-  function getPagesForWebsiteId(websiteId) {
-    var pages=[];
-
-    for(var i = 0; i < PAGES.length; i++) {
-      if (PAGES[i].websiteId === websiteId) {
-        pages.push(PAGES[i]);
+  function deletePage(req, res) {
+    var pageId = req.params.pageId;
+    pageModel.deletePage(pageId).then(
+      function (page) {
+        res.json(page);
+      },
+      function (err) {
+        res.sendStatus(400).send(err);
       }
-    }
-    return pages;
+    );
   }
 
-  function getPageById(pageId){
-    for(var i = 0; i < PAGES.length; i++) {
-      if (PAGES[i]._id === pageId) {
-        return PAGES[i];
-      }
-    }
+  // function findPageById(req, res) {
+  //   console.log('server side find page by id');
+  //   var pageId = req.params.pageId;
+  //   for (var i = 0; i < pages.length; i++) {
+  //     if (pages[i]._id === pageId) {
+  //       return res.json(pages[i]);
+  //     }
+  //   }
+  //   res.status(404).send("Cannot find page.");
+  // }
+
+  function findPageById(req, res) {
+    console.log('server side find page by id');
+    var pageId = req.params.pageId;
+    pageModel.findPageById(pageId)
+      .then(function (page) {
+        console.log('page= ' + page);
+        res.status(200).json(page);
+      }, function (err) {
+        console.log(err);
+        res.status(500);
+      })
   }
-};
+
+
+  // function updatePage(req, res) {
+  //   console.log('server side update page');
+  //   var pageId = req.params.pageId;
+  //   var updatedPage = req.body;
+  //   for (var i = 0; i < pages.length; i++) {
+  //     if (pages[i]._id === pageId) {
+  //       pages[i].name = updatedPage.name;
+  //       pages[i].title = updatedPage.title;
+  //       res.json(pages[i]);
+  //       return;
+  //     }
+  //   }
+  //   res.status(404).send("Cannot find page");
+  // }
+
+  // function updatePage(req, res) {
+  //   console.log('server side update page');
+  //   var pageId = req.params.pageId;
+  //   var page = req.body;
+  //   pageModel.updatePage(pageId, page)
+  //     .then(function (response) {
+  //       res.send(200).json(response);
+  //     }, function (err) {
+  //       console.log(err);
+  //       res.send(500);
+  //     })
+  // }
+
+  function updatePage(req, res) {
+    var pageId = req.params.pageId;
+    var updatedPage = req.body;
+    pageModel.updatePage(pageId, updatedPage).then(
+      function (page) {
+        if (page) {
+          res.json(page);
+        } else {
+          res.sendStatus(400).send("Cannot find page with corresponding Id");
+        }
+      },
+      function (err) {
+        res.sendStatus(400).send(err);
+      }
+    );
+  }
+}
