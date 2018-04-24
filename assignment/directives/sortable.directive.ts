@@ -1,15 +1,14 @@
-import {AfterViewInit, EventEmitter, Directive, ElementRef, Output} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, EventEmitter, Output} from '@angular/core';
 declare var jQuery: any;
 
 @Directive({
   selector: '[appSortable]'
 })
 export class SortableDirective implements AfterViewInit {
-
-  @Output() newIndexes = new EventEmitter();
+  @Output() newIndexes = new EventEmitter(); // this will emit an event for the parent component or the directive calling component
   initialIndex: any;
 
-  constructor(private el: ElementRef) { }
+  constructor(private el: ElementRef) {}
 
   ngAfterViewInit() {
     this.appSortable(this);
