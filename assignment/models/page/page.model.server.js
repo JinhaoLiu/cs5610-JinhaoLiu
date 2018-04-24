@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
-var PageSchema = require("./page.schema.server");
-var WebsiteModel = require("../website/website.model.server")
+var PageSchema = require("./page.schema.server.js");
+var WebsiteModel = require("../website/website.model.server.js")
 
 var PageModel = mongoose.model('PageModel', PageSchema);
 
@@ -45,6 +45,6 @@ function deletePage(pageId) {
           website.pages.pull({_id : pageId});
           website.save();
         })
-    })
+    });
   return PageModel.remove({_id: pageId});
 }

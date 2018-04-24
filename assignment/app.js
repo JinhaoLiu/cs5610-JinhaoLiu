@@ -1,7 +1,7 @@
-module.exports = function (app){
-  require("./services/user.service.server")(app);
-  require("./services/website.service.server")(app);
-  require("./services/page.service.server")(app);
-  require("./services/widget.service.server")(app);
-  var db = require("./models/model");
-}
+module.exports = function(app) {
+  require("./services/user.service.server.js")(app);
+  require("./services/website.service.server.js")(app);
+  require("./services/page.service.server.js")(app);
+  require("./services/widget.service.server.js")(app);
+  var db = require("./models/model.js");
+};
