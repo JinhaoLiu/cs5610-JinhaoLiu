@@ -1,16 +1,19 @@
-// Get the dependencies
+var express = require('express');
+var mongoose = require('mongoose');
+// var connectionString ='mongodb://127.0.0.1:27017/webdev';
+var connectionString = 'mongodb://jinhaoliu:0@ds263837.mlab.com:63837/heroku_1zscvlfl';
+mongoose.connect(connectionString);
 
-const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
 const path = require('path');
 const http = require('http');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const passport = require('passport');
-const app = express();
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var passport = require('passport');
 
 app.use(session({
-  secret: 'S3CR3T!',
+  secret: 'this is the secret',
   resave: true,
   saveUninitialized: true
 }));
@@ -18,44 +21,34 @@ app.use(session({
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
-
-//add
-var connectionString = 'mongodb://jinhaoliu:0@ds263837.mlab.com:63837/heroku_1zscvlfl'; // for heroku
-var mongoose = require("mongoose");
-mongoose.createConnection(connectionString);
-
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
-
-// Point static path to dist -- For building -- REMOVE
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'dist')));
-// app.use(express.static(path.join(__dirname, 'src/assests')));
+app.use(express.static(path.join(__dirname, 'src/assets')));
 
-// CORS
-app.use(function (req, res, next) {
+//CORS
+app.use(function(reg, res, next){
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE, OPTIONS');
   next();
 });
 
-const port = process.env.PORT || '3100';
+
+const port=process.env.PORT || '3100';
 app.set('port', port);
 
 // Create HTTP server
 const server = http.createServer(app);
 
-//var serverSide = require("./server/test-mongodb/app");
-//serverSide(app);
 
-require("./assignment/app")(app);
+require("./assignment/app.js")(app);
 
-// For Build: Catch all other routes and return the index file -- BUILDING
+// For Build: Catch all other routes and return the index file -- BUILDINg
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
 
-server.listen( port , () => console.log('Running'));
 
-//-- working on heroku
-// server.listen(process.env.PORT , () => console.log('API running on localhost:${port}'));
+server.listen( port , function() {
+  console.log('Node app is running on port', app.get('port'))});

@@ -1,115 +1,63 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Page} from '../../../model/page.model.client';
-import {PageService} from '../../../service/page.service.client';
-import {UserService} from '../../../service/user.service.client';
-import {WebsiteService} from '../../../service/website.service.client';
+import {PageService} from '../../../services/page.service.client';
+import {NgForm} from '@angular/forms';
+import {Page} from '../../../models/page.model.client';
 
 @Component({
   selector: 'app-page-edit',
   templateUrl: './page-edit.component.html',
-  styleUrls: ['./page-edit.component.css']
+  styleUrls: ['../../../app.component.css']
 })
 export class PageEditComponent implements OnInit {
-
-  // properties
+  @ViewChild('f') pageForm: NgForm;
   userId: String;
-  pageId: String;
-  // page: Page = {_id: '', name: '', websiteId: '', description: ''};
-  // page: any = {};
-  updatedPage: any = {};
-  name: String;
   websiteId: String;
-  description: String;
+  pageId: String;
+  name: String;
+  page: Page;
+  title: String;
+  errorFlag: boolean;
+  errorMsg: String;
 
-  constructor(private pageService: PageService,
-              private userService: UserService,
-              private websiteService: WebsiteService,
-              private activatedRoute: ActivatedRoute,
-              private router: Router) {
+  constructor(private pageService: PageService, private activatedRoute: ActivatedRoute, private router: Router) {
   }
-
-  // ngOnInit() {
-  //   this.activatedRoute.params.subscribe(
-  //     params => {
-  //       this.pageService.findPageById(params.pid).subscribe(
-  //         (page: any) => {
-  //           console.log('pid= ' + params.pid);
-  //           console.log('page._websiteId = ' + page._websiteId);
-  //           console.log('page.name = ' + page.name);
-  //           console.log('page.description = ' + page.description);
-  //           if (page._websiteId === params.wid) {
-  //             this.websiteService.findWebsitesById(page._websiteId).subscribe(
-  //               (website: any) => {
-  //                 if (website._user === params.uid) {
-  //                   this.userId = params.uid;
-  //                   this.pageId = params.pid;
-  //                   this.websiteId = params.wid;
-  //                   this.updatedPage = page;
-  //                 } else {
-  //                   // throw error message
-  //                   console.log('Two user id do not match.');
-  //                 }
-  //               }
-  //             );
-  //           } else {
-  //             // throw error message
-  //             console.log('Two website id do not match');
-  //           }
-  //         }
-  //       );
-  //     }
-  //   );
-  // }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(
-      (params: any) => {
-        this.pageService.findPageById(params['pid']).subscribe(
-          (page: any) => {
-            console.log('pid= ' + params['pid']);
-            console.log('page.name = ' + page.name);
-            console.log('page.name = ' + page._websiteId);
-            console.log('page = ' + page.body);
-            // this.page = page;
-            this.userId = params.uid;
-            this.pageId = params.pid;
-            this.websiteId = params.wid;
-            this.updatedPage = page;
-          },
-          (error: any) => {
-            console.log(error);
-          }
-        );
-      });
-  }
+    this.errorFlag = false;
+    this.errorMsg = 'Please enter a page name';
+    this.activatedRoute.params
+      .subscribe(
+        params => {
+          return this.pageService.findPageById(params['pid']).subscribe((returnPage: Page) => {
+            this.userId = params['uid'];
+            this.websiteId = params['wid'];
+            this.pageId = params['pid'];
+            this.page = returnPage;
+            this.name = this.page.name;
+            this.title = this.page.title;
 
-  deletePage() {
-    this.pageService.deletePage(this.pageId).subscribe(
-      (page: any) => {
-        const url: String = '/user/' + this.userId + '/website/' + this.websiteId + '/page';
-        this.router.navigate([url]);
-      },
-      (error: any) => {
-        console.log(error);
-      }
-    );
-    // const url: String = '/user/' + this.userId + '/website/' + this.websiteId + '/page';
-    // console.log('pgae-edit ---------- page url= ' + url);
-    // this.router.navigate([url]);
-  }
+          });
 
-  updatePage(page) {
-    if (page.name !== '' && page.description !== '') {
-      this.pageService.updatePage(page._id, page).subscribe(
-        (page: any) => {
-          const url: String = '/user/' + this.userId + '/website/' + this.websiteId + '/page';
-          this.router.navigate([url]);
-        },
-        (error: any) => {
-          console.log(error);
         }
       );
+  }
+
+  update() {
+    this.page.name = this.pageForm.value.name;
+    if (this.page.name === undefined || this.page.name.trim() === '') {
+      this.errorFlag = true;
+    } else {
+      this.page.title = this.pageForm.value.title;
+      return this.pageService.updatePage(this.pageId, this.page).subscribe((returnPage: Page) => {
+        this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+
+      });
     }
+  }
+
+  delete() {
+    return this.pageService.deletePage(this.pageId).subscribe((returnPage: Page) => {
+    });
   }
 }

@@ -1,66 +1,52 @@
-import {Component, OnInit} from '@angular/core';
-import {WebsiteService} from '../../../service/website.service.client';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {NgForm} from '@angular/forms';
+import {WebsiteService} from '../../../services/website.service.client';
+import {Website} from '../../../models/website.model.client';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Website} from '../../../model/website.model.client';
+import {SharedService} from '../../../services/shared.service';
 
 @Component({
   selector: 'app-website-new',
   templateUrl: './website-new.component.html',
-  styleUrls: ['./website-new.component.css']
+  styleUrls: ['../../../app.component.css']
 })
 export class WebsiteNewComponent implements OnInit {
-
+  @ViewChild('f') websiteForm: NgForm;
+  errorFlag: boolean;
+  errorMsg: String;
+  websiteId: String;
+  name: String;
+  description: String;
   userId: String;
-  // websiteId: String;
-  websites: any[];
-  // _id: String;
-  // name: String;
-  // developId: String;
-  // description: String;
-  newWebsite: any = {};
+  websites = [];
+  user: {};
 
-  constructor(private websiteService: WebsiteService, private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private websiteService: WebsiteService,
+              private sharedService: SharedService, private activatedRoute: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(
-      (params: any) => {
-        // this.userId = params['uid'];
-        this.userId = params.uid;
-        console.log('uid= ' + this.userId);
-        // this.websiteId = params['wid'];
-        return this.websiteService.findWebsitesByUser(this.userId).subscribe(
-          (websites: any[]) => {
-            console.log('len=' + websites.length);
-            this.websites = websites;
-          }
-        );
-      }
-    );
-    // this.websites = this.websiteService.findWebsitesByUser(this.userId);
+    this.errorMsg = 'Please enter a website name';
+    this.errorFlag = false;
+    this.getUser();
   }
 
-  createNewWebsite(website) {
-    console.log('hello create new website');
-    console.log('website new----- new website name= ' + website.name);
-    console.log('website new----- new website description =' + website.description);
-    // website.developerId = this.userId;
-    if (website.name.trim() !== '' && website.description.trim() !== '') {
-      this.websiteService.createWebsite(this.userId, website).subscribe(
-        (website: any) => {
-          console.log('website.name = ' + website.name);
-          const url: any = '/user/' + this.userId + '/website';
-          this.router.navigate([url]);
-        },
-        (error: any) => {
-        }
-      );
+  create() {
+    const website = new Website('', '', '', '');
+    website.name = this.websiteForm.value.name;
+    if (website.name === undefined || website.name.trim() === '') {
+      this.errorFlag = true;
+    } else {
+      website.description = this.websiteForm.value.description;
+      website.developerId = this.userId;
+      return this.websiteService.createWebsite(this.userId, website).subscribe((returnWebsite: Website) => {
+        this.router.navigate(['../'], {relativeTo: this.activatedRoute} );
+      });
     }
-    // this.websiteService.createWebsite(this.userId, newWebsite);
-    // const url: String = '/user/' + this.userId + '/website';
-    // console.log('new website -------- url = ' + url);
-    // this.router.navigate([url]);
-    // console.log('size= ' + this.websites.length);
+  }
+
+  getUser() {
+    this.user = this.sharedService.user;
+    this.userId = this.user['_id'];
   }
 }
-

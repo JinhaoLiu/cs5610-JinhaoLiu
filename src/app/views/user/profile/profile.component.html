@@ -1,86 +1,56 @@
-<!--<nav class="navbar navbar-fixed-top navbar-light bg-primary">-->
-<!--<div class="navbar-brand text-white font-weight-bold">-->
-<!--Profile-->
-<!--</div>-->
-<!--<a class="navbar-brand btn pull-right" (click)="updateUserInfo(user)">-->
-<!--<span class="glyphicon glyphicon-ok text-white"></span>-->
-<!--</a>-->
-<!--</nav>-->
-<!--<div class="container cl-body-padding">-->
-<!--<form>-->
-<!--<div class="form-group">-->
-<!--<label for="username">Username</label>-->
-<!--<input [(ngModel)]="user.username"  id="username" type="text" name="username" placeholder="jannunzi" class="form-control">-->
-<!--</div>-->
-<!--<div class="form-group">-->
-<!--<label for="email">Email</label>-->
-<!--<input type="email" id="email" placeholder="jannunzi@gmail.com" class="form-control">-->
-<!--</div>-->
-<!--<div class="form-group">-->
-<!--<label for="firstName">First Name</label>-->
-<!--<input [(ngModel)]="user.firstName" id="firstName" type="text" name="firstName" placeholder="Jose" class="form-control">-->
-<!--</div>-->
-<!--<div class="form-group">-->
-<!--<label for="lastName">Last Name</label>-->
-<!--<input [(ngModel)]="user.lastName" id="lastName" type="text" name="lastName" placeholder="Annunziato" class="form-control">-->
-<!--</div>-->
-<!--<div class="form-group">-->
-<!--<a routerLink="/user/{{user._id}}/website" class="btn btn-primary btn-block">Websites</a>-->
-<!--</div>-->
-<!--<div class="form-group">-->
-<!--<a routerLink="/login" class="btn btn-danger btn-block">Logout</a>-->
-<!--</div>-->
-<!--</form>-->
-<!--</div>-->
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<div class="container-fluid ct-no-padding">
+  <div class="card fixed-top no-border">
 
-<!--<nav class="navbar navbar-fixed-bottom navbar-light bg-primary">-->
-<!--<a class="navbar-brand pull-right" routerLink="/user/{{userId}}">-->
-<!--<i class="glyphicon glyphicon-user text-white"></i>-->
-<!--</a>-->
-<!--</nav>-->
+    <div class="card-header bg-primary text-white">
+      <strong class="heading-padding">Profile</strong>
+      <a class="btn btn-link float-right icon-no-padding" (click)="f.ngSubmit.emit()"><i class="fa fa-check white-icon"></i></a>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <form (ngSubmit)="update()" #f="ngForm">
 
-<nav class="navbar navbar-fixed-top navbar-light bg-primary">
-  <div *ngIf="errorFlag" class="alert alert-danger">
-    {{errorMessage}}
+          <label class="lab-no-m"><strong>Username</strong></label>
+          <input [(ngModel)]="username"
+                 type="text"
+                 class="form-control"
+                 name="username"
+                 placeholder={{username}}>
+          <label class="lab-no-m"><strong>Email</strong></label>
+          <input [(ngModel)]="email"
+                 type="text"
+                 class="form-control"
+                 name="email"
+                 placeholder={{email}}>
+          <label class="lab-no-m"><strong>First Name</strong></label>
+          <input [(ngModel)]="firstName"
+                 type="text"
+                 class="form-control"
+                 name="firstName"
+                 placeholder={{firstName}}>
+          <label class="lab-no-m"><strong>Last Name</strong></label>
+          <input [(ngModel)]="lastName"
+                 type="text"
+                 class="form-control"
+                 name="lastName"
+                 placeholder={{lastName}}>
+        </form>
+
+      </div>
+      <a routerLink="/user/{{userId}}/website" class="btn btn-primary btn-block text-white">Website</a>
+      <a routerLink="/login" (click)="delete()" class="btn btn-danger btn-block text-white">Delete</a>
+
+      <a (click)="logout()" class="btn btn-danger btn-block text-white">Logout</a>
+    </div>
+
+    <div class="card-footer bg-primary text-white fixed-bottom">
+      <a class="btn btn-link float-right white-icon icon-no-padding" routerLink="/user/{{userId}}"><i class="fa fa-user" aria-hidden="true"></i></a>
+    </div>
   </div>
-  <div class="navbar-brand text-white font-weight-bold">
-    Profile
-  </div>
-  <a class="navbar-brand btn pull-right" (click)="updateUserInfo(user)">
-    <span class="glyphicon glyphicon-ok text-white"></span>
-  </a>
-</nav>
-<div class="container cl-body-padding">
-  <form>
-    <div class="form-group">
-      <label>Username</label>
-      <input [(ngModel)]="user.username" type="text" name="username" placeholder="jannunzi" class="form-control">
-    </div>
-    <div class="form-group">
-      <label>Email</label>
-      <input [(ngModel)]="user.email" type="email" name="email" placeholder="jannunzi@gmail.com" class="form-control">
-    </div>
-    <div class="form-group">
-      <label>First Name</label>
-      <input [(ngModel)]="user.firstname" type="text" name="firstName" placeholder="Jose" class="form-control">
-    </div>
-    <div class="form-group">
-      <label>Last Name</label>
-      <input [(ngModel)]="user.lastname" type="text" name="lastName" placeholder="Annunziato" class="form-control">
-    </div>
-    <div class="form-group">
-      <a routerLink="/user/{{user._id}}/website" class="btn btn-primary btn-block">Websites</a>
-    </div>
-    <div class="form-group">
-      <a (click)="deleteUser()" class="btn btn-warning btn-block">Delete User</a>
-    </div>
-    <div class="form-group">
-      <a (click)="logout()" class="btn btn-danger btn-block">Logout</a>
-    </div>
-  </form>
+
+
 </div>
-<nav class="navbar navbar-fixed-bottom navbar-light bg-primary">
-  <a class="navbar-brand pull-right" routerLink="/user/{{userId}}">
-    <i class="glyphicon glyphicon-user text-white"></i>
-  </a>
-</nav>
+</body>
+</html>

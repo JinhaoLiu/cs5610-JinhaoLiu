@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import {FlickrService} from '../../../../../services/flickr.service.client';
+import {Component, OnInit} from '@angular/core';
 import {WidgetService} from '../../../../../services/widget.service.client';
 import {ActivatedRoute, Router} from '@angular/router';
+import {FlickrService} from '../../../../../services/flickr.service.client';
 import {Widget} from '../../../../../models/widget.model.client';
 
 @Component({
@@ -18,30 +18,25 @@ export class FlickrImageSearchComponent implements OnInit {
   photos: [any];
   error: string;
   searchText: string;
-  widget: Widget;
 
-  constructor(private flickrService: FlickrService,
-              private widgetService: WidgetService,
-              private router: Router,
-              private activatedRoute: ActivatedRoute) { }
+  constructor(private flickrService: FlickrService, private widgetService: WidgetService,
+              private router: Router, private activatedRoute: ActivatedRoute) {
+  }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(
-      (params: any) => {
-        this.userId = params['uid'];
-        this.websiteId = params['wid'];
-        this.pageId = params['pid'];
-        this.widgetId = params['wgid'];
-        console.log('wgid ' + this.widgetId);
-        if (this.widgetId === 'image') {
-          this.widget = new Widget(undefined, 'IMAGE', this.pageId);
-        } else {
-          this.widgetService.findWidgetById(this.widgetId).subscribe(
-            (widget: Widget) => {
-              this.widget = widget;
-            });
+
+
+    // fetch userId, pageId and websiteId from url
+    this.activatedRoute.params
+      .subscribe(
+        (params: any) => {
+          this.userId = params['uid'];
+          this.websiteId = params['wid'];
+          this.pageId = params['pid'];
+          this.widgetId = params['wgid'];
+          console.log(this.widgetId);
         }
-      });
+      );
   }
 
   searchPhotos() {
@@ -49,7 +44,6 @@ export class FlickrImageSearchComponent implements OnInit {
       .searchPhotos(this.searchText)
       .subscribe(
         (data: any) => {
-          console.log('this is searchPhotos');
           let val = data._body;
           val = val.replace('jsonFlickrApi(', '');
           val = val.substring(0, val.length - 1);
@@ -62,31 +56,23 @@ export class FlickrImageSearchComponent implements OnInit {
   selectPhoto(photo) {
     let url = 'https://farm' + photo.farm + '.staticflickr.com/' + photo.server;
     url += '/' + photo.id + '_' + photo.secret + '_b.jpg';
-
-    this.widget.url = url;
-    console.log(url);
-    if (this.widgetId === 'image') {
-      this.widgetService.createWidget(this.pageId, this.widget).subscribe(
-        (widget: Widget) => {
-          this.widget = widget;
-          this.router.navigate(['../..'], {relativeTo: this.activatedRoute});
+    const widget = {
+      websiteId: this.websiteId,
+      pageId: this.pageId,
+      url: url
+    };
+    return this.widgetService
+      .updateWidget(this.widgetId, widget)
+      .subscribe(
+        (data: any) => {
+          const result = data;
+          if (result) {
+            this.router.navigate(['/user/' + this.userId + '/website/' +
+            this.websiteId + '/page/' + this.pageId + '/widget/' + this.widgetId]);
+          } else {
+            this.error = 'failed!';
+          }
         }
       );
-    } else {
-      this.widgetService
-        .updateWidget(this.widgetId, this.widget)
-        .subscribe(
-          (data: any) => {
-            console.log('this is 123');
-            const result = data;
-            if (result) {
-              this.router.navigate(['../..', {relativeTo: this.activatedRoute}]);
-            } else {
-              this.error = 'failed!';
-            }
-          }
-        );
-    }
   }
-
 }

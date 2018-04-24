@@ -1,85 +1,69 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {NgForm} from '@angular/forms';
+import {Website} from '../../../models/website.model.client';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Website} from '../../../model/website.model.client';
-import {WebsiteService} from '../../../service/website.service.client';
+import {UserService} from '../../../services/user.services.client';
+import {WebsiteService} from '../../../services/website.service.client';
 
 @Component({
   selector: 'app-website-edit',
   templateUrl: './website-edit.component.html',
-  styleUrls: ['./website-edit.component.css']
+  styleUrls: ['../../../app.component.css']
 })
 export class WebsiteEditComponent implements OnInit {
-
-  // website: Website;
-  updatedWebsite: any = {};
-  websites: any[];
+  @ViewChild('f') websiteForm: NgForm;
+  errorFlag: boolean;
+  errorMsg: String;
   websiteId: String;
-  developerId: String;
+  website: Website;
+  name: String;
+  description: String;
+  userId: String;
+  websites = [];
 
-  constructor(private activatedRoute: ActivatedRoute, private websiteService: WebsiteService, private router: Router) {
+  constructor(private websiteService: WebsiteService, private activatedRoute: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(
-      params => {
-        this.websiteId = params['wid'];
-        this.developerId = params['uid'];
-        this.websiteService.findWebsitesByUser(this.developerId).subscribe(
-          (websites: any) => {
-            this.websites = websites;
-          },
-          (error: any) => {
-          }
-        );
-        this.websiteService.findWebsitesById(this.websiteId).subscribe(
-          (website: Website) => {
-            console.log(this.updatedWebsite);
-            this.updatedWebsite = website;
-          },
-          (error: any) => {
-          }
-        );
-      }
-    );
-    // this.updatedWebsite = this.websiteService.findWebsitesById(this.websiteId);
-
-
-    // console.log('test-----' + this.updatedWebsite.name);
-  }
-
-  // stop here (update website)
-  updateWebsite(website) {
-    console.log('hello updateeeeeeeeee');
-    console.log('website edit----- dev id = ' + this.developerId);
-    console.log('website edit----- updatedWebsite name = ' + website.name);
-    console.log('website edit----- updatedWebsite description = ' + website.description);
-
-    if (website.name.trim() !== '' && website.description.trim() !== '') {
-      // website.developerId = this.developerId;
-      this.websiteService.updateWebsite(website._id, website).subscribe(
-        (website: any) => {
-          const url: String = '/user/' + this.developerId + '/website';
-          this.router.navigate([url]);
-        },
-        (error: any) => {
+    this.errorFlag = false;
+    this.errorMsg = 'Please enter a website name';
+    this.activatedRoute.params
+      .subscribe(
+        params => {
+          return this.websiteService.findWebsiteByUser(params['uid']).subscribe((returnWebsites: Website[]) => {
+            this.userId = params['uid'];
+            this.websites = returnWebsites;
+          });
         }
       );
-      // const url: any = '/user/' + this.developerId + '/website';
-      // this.router.navigate([url]);
-      // console.log('website edit url= ' + url);
+    this.activatedRoute.params
+      .subscribe(
+        params => {
+          return this.websiteService.findWebsiteById(params['wid']).subscribe((returnWebsite: Website) => {
+            this.website = returnWebsite;
+            this.websiteId = this.website._id;
+            this.userId = this.website.developerId;
+            this.name = this.website.name;
+            this.description = this.website.description;
+          });
+        }
+      );
+  }
+
+  update() {
+    this.website.name = this.websiteForm.value.name;
+    if (this.website.name.trim() === '' || this.website.name === undefined) {
+      this.errorFlag = true;
+    } else {
+      this.website.description = this.websiteForm.value.description;
+      return this.websiteService.updateWebsite(this.websiteId, this.website).subscribe((website: Website) => {
+        this.router.navigate(['../'], {relativeTo: this.activatedRoute} );
+      });
     }
   }
 
-  deleteWebsite() {
-    console.log('hello, here is the delete funcion in website-edit.component');
-    this.websiteService.deleteWebsite(this.websiteId).subscribe(
-      (website: any) => {
-        const url: String = '/user/' + this.developerId + '/website';
-        this.router.navigate([url]);
-      },
-      (error: any) => {}
-    );
-    // const url: String = '/user/' + this.developerId + '/website';
-    // this.router.navigate([url]);
+  delete() {
+    return this.websiteService.deleteWebsite(this.websiteId).subscribe((website: Website) => {
+    });
   }
 }

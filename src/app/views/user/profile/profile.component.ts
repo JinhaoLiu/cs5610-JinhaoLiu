@@ -1,83 +1,75 @@
-import {Component, OnInit} from '@angular/core';
-import {RouterLink, ActivatedRoute, Router} from '@angular/router';
-
-import {UserService} from '../../../service/user.service.client';
-import {User} from '../../../model/user.model.client';
-import {SharedService} from '../../../service/shared.service';
-
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {UserService} from '../../../services/user.services.client';
+import {ActivatedRoute, Router} from '@angular/router';
+import {NgForm} from '@angular/forms';
+import {User} from '../../../models/user.model.client';
+import {SharedService} from '../../../services/shared.service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['../../../app.component.css']
 })
 export class ProfileComponent implements OnInit {
-
-  // properties
-  user: any = {};
+  @ViewChild('f') loginForm: NgForm;
   userId: String;
-  errorFlag: boolean;
-  errorMessage: String;
+  user: {};
+  username: String;
+  email: String;
+  firstName: String;
+  lastName: String;
 
   constructor(private userService: UserService,
-              private activatedRoute: ActivatedRoute,
-              private router: Router,
-              private sharedService: SharedService) {
+              private sharedService: SharedService, private activatedRoute: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit() {
-
-    console.log(this.sharedService.user);
-    if (this.sharedService.user === '') {
-      const url: any = '/login';
-      this.router.navigate([url]);
-    } else {
-      this.user = this.sharedService.user;
-      this.userId = this.user._id;
-      console.log('this uid= ' + this.user._id);
-      return this.userService.findUserById(this.user._id).subscribe(
-        (user: any) => {
-          this.user = user;
-        },
-        (error: any) => {
-          this.errorFlag = true;
-          this.errorMessage = error.toString();
+    this.getUser();
+    /*this.activatedRoute.params.subscribe(params => {
+      return this.userService.findUserById(params['uid']).subscribe(
+        (returnUser: User) => {
+          this.userId = params['uid'];
+          this.user = returnUser;
+          this.username = this.user.username;
+          this.email = this.user.email;
+          this.firstName = this.user.firstName;
+          this.lastName = this.user.lastName;
+          this.email = this.user.email;
         }
       );
-    }
+    });
+*/
   }
 
-  updateUserInfo(updatedUser) {
-    this.userService.updateUser(this.userId, updatedUser).subscribe(
-      (user: any) => {
-        console.log('profile user update user name = ' + user.username);
-        this.errorFlag = false;
-        this.user = user;
-        this.ngOnInit();
-      },
-      (error: any) => {
-        this.errorFlag = true;
-        this.errorMessage = error;
-      }
-    );
-  }
-
-  deleteUser() {
-    this.userService.deleteUser(this.userId).subscribe(
-      (user: any) => {
-        const url: any = '/login';
-        this.router.navigate([url]);
-      },
-      (error: any) => {
-        this.errorFlag = true;
-        this.errorMessage = error;
-      }
-    );
+  getUser() {
+    this.user = this.sharedService.user;
+    this.username = this.user['username'];
+    this.firstName = this.user['firstName'];
+    this.lastName = this.user['lastName'];
+    this.email = this.user['email'];
+    this.userId = this.user['_id'];
   }
 
   logout() {
-    this.userService.logout().subscribe(
-      (data: any) => this.router.navigate(['/login'])
-    );
+    this.userService.logout()
+      .subscribe(
+        (data: any) => this.router.navigate(['/login'])
+      );
+  }
+
+  update() {
+    this.user['username'] = this.loginForm.value.username;
+    this.user['firstName'] = this.loginForm.value.firstName;
+    this.user['lastName'] = this.loginForm.value.lastName;
+    this.user['email'] = this.loginForm.value.email;
+    this.userService.updateUser(this.userId, this.user).subscribe((data: any) => {
+      this.router.navigate(['/user', this.userId]);
+    });
+  }
+
+  delete() {
+    this.userService.deleteUser(this.userId).subscribe((returnUser: User) => {
+      this.router.navigate(['/login']);
+    });
   }
 }

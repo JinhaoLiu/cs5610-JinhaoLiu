@@ -1,84 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="initial-scale = 1.25, user-scalable = no">
   <meta charset="UTF-8">
-  <title>Websits List</title>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <link href="../css/style.css" rel="stylesheet"/>
+  <title>website-new</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+
 </head>
 <body>
-<nav class="navbar navbar-fixed-top cl-blue-navbar">
-  <div class="row">
-    <div class="col-xs-4 hidden-xs">
-      <div class="container-fluid">
-        <p class="navbar-text pull-left">
-          <a href="website-list.html" class="navbar-link cl-text-white">
-            <span class="glyphicon glyphicon-chevron-left"></span>
+<div class="container-fluid ct-no-padding">
+  <div class="card fixed-top">
+    <div class="card-header bg-primary text-white">
+      <div class="row">
+        <div class="col-4 hide-section">
+          <a href="website-list.html"><i class="fa fa-chevron-left white-icon" aria-hidden="true"></i></a>
+          <strong class="heading-padding">Websites</strong>
+          <a class="float-right" href="website-new.html"><i class="fa fa-plus white-icon" aria-hidden="true"></i>
           </a>
-        </p>
-        <a class="cl-text-white navbar-brand cl-text-bold" href="#">
-          Websites
-        </a>
-        <a href="#" class="navbar-link navbar-text pull-right cl-text-white cl-icon-padding">
-          <span class="glyphicon glyphicon-plus"></span>
-        </a>
-      </div>
-    </div>
-    <div class="col-xs-8">
-      <div class="container-fluid">
-        <a class="cl-text-white navbar-brand cl-text-bold" href="#">
-          New Websites
-        </a>
-        <a href="website-list.html" class="navbar-link navbar-text pull-right cl-text-white cl-icon-padding">
-          <span class="glyphicon glyphicon-ok"></span>
-        </a>
-      </div>
-    </div>
-  </div>
-</nav>
+        </div>
 
-<div class="contain-fluid">
-  <div class="col-xs-4 hidden-xs">
-    <ul class="list-group cl-list-group-borderless">
-      <li class="list-group-item cl-list-item-borderless">
-        <a href="website-edit.html"><span class="glyphicon glyphicon-cog pull-right"></span></a>
-        <a href="../page/page-list.html">Blogging App</a>
-      </li>
-      <li class="list-group-item cl-list-item-borderless">
-        <a href="website-edit.html"><span class="glyphicon glyphicon-cog pull-right"></span></a>
-        <a href="../page/page-list.html">Address Book App</a>
-      </li>
-      <li class="list-group-item cl-list-item-borderless">
-        <a href="website-edit.html"><span class="glyphicon glyphicon-cog pull-right"></span></a>
-        <a href="../page/page-list.html">Script Testing App</a>
-      </li>
-      <li class="list-group-item cl-list-item-borderless">
-        <a href="website-edit.html"><span class="glyphicon glyphicon-cog pull-right"></span></a>
-        <a href="../page/page-list.html">Blogger</a>
-      </li>
-    </ul>
-  </div>
-  <div class="col-xs-8 borders">
-    <form>
-      <div class="form-group cl-8-top">
-        <label for="website-name">Name</label>
-        <input type="text" class="form-control" id="website-name" placeholder="Name">
+        <div class="col-lg-8 col-md-12">
+          <a href="website-list.html"><i class="fa fa-chevron-left show-section white-icon"
+                                                                 aria-hidden="true"></i></a>
+          <strong class="heading-padding">New Website</strong>
+          <a class="float-right" href="website-list.html"><i class="fa fa-check white-icon"
+                                                                                   aria-hidden="true"></i>
+          </a>
+        </div>
       </div>
-      <div class="form-group cl-8-top">
-        <label for="website-description">Description</label>
-        <textarea id="website-description" class="form-control" rows="5" placeholder="Description"></textarea>
+    </div>
+    <div class="card-group">
+      <div class="card col-4 p-0 hide-section">
+        <div class="card-body list-no-right-p">
+          <ul class="list-group">
+            <li class="list-group-item no-border"><a href="../page/page-list.html">Address Book App</a><a class="float-right"
+                                                                                                href="website-edit.html">
+              <i class="fa fa-cog" aria-hidden="true"></i>
+            </a></li>
+            <li class="list-group-item no-border"><a href="../page/page-list.html">Blogger</a><a class="float-right"
+                                                                                       href="website-edit.html"><i
+              class="fa fa-cog" aria-hidden="true"></i>
+            </a></li>
+            <li class="list-group-item no-border"><a href="../page/page-list.html">Blogging App</a><a class="float-right"
+                                                                                            href="website-edit.html"><i
+              class="fa fa-cog" aria-hidden="true"></i>
+            </a></li>
+            <li class="list-group-item no-border"><a href="../page/page-list.html">Script Testing App</a><a class="float-right"
+                                                                                                  href="website-edit.html"><i
+              class="fa fa-cog" aria-hidden="true"></i>
+            </a></li>
+          </ul>
+        </div>
       </div>
-    </form>
+
+      <div class="card p-0 col-lg-8 col-md-12">
+        <div class="card-body">
+          <div class="form-group">
+            <label class="lab-no-m"><strong>Name</strong></label>
+            <input type="text" class="form-control" placeholder="Name">
+            <label class="lab-no-m"><strong>Description</strong></label>
+            <textarea class="form-control text-muted" rows="5">Description</textarea>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="card-footer bg-primary text-white">
+      <a class="float-right white-icon" href="../user/profile.html"><i class="fa fa-user" aria-hidden="true"></i></a>
+    </div>
   </div>
 </div>
-
-<nav class="navbar navbar-fixed-bottom cl-blue-navbar">
-  <div class="container-fuild">
-    <a href="../user/profile.html" class="navbar-link navbar-text pull-right cl-text-white cl-icon-padding">
-      <span class="glyphicon glyphicon-user"></span>
-    </a>
-  </div>
-</nav>
 </body>
 </html>

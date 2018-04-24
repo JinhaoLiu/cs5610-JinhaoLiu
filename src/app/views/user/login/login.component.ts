@@ -1,83 +1,41 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {UserService} from '../../../service/user.service.client';
-import {User} from '../../../model/user.model.client';
-
-import {ViewChild} from '@angular/core';
 import {NgForm} from '@angular/forms';
-import {Widget} from '../../../model/widget.model.client';
-import {SharedService} from '../../../service/shared.service';
+import {UserService} from '../../../services/user.services.client';
+import {SharedService} from '../../../services/shared.service';
 
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['../../../app.component.css']
 })
 export class LoginComponent implements OnInit {
   @ViewChild('f') loginForm: NgForm;
-  username: String; // see usage as two-way data binding
-  password: String; // see usage as two-way data binding
+  username: String;
+  password: String;
   errorFlag: boolean;
   errorMsg: String;
-  Users: any[];
 
+  constructor(private userService: UserService, private sharedService: SharedService, private router: Router) {
+  }
 
-  constructor(private userService: UserService,
-              private router: Router,
-              private sharedService: SharedService) {
+  login() {
+    this.username = this.loginForm.value.username;
+    this.password = this.loginForm.value.password;
+    this.userService.login(this.username, this.password)
+      .subscribe((data: any) => {
+          this.sharedService.user = data;
+          this.router.navigate(['/user', data._id]);
+        },
+        (error: any) => {
+          this.errorFlag = true;
+        });
   }
 
   ngOnInit() {
     this.errorFlag = false;
+    this.errorMsg = 'Wrong username or password!';
   }
 
-  login(username: String, password: String) {
-    if (username == null || username.trim() === '') {
-      this.errorMsg = 'Username cannot be empty';
-      this.errorFlag = true;
-    }
-    if (password == null || password.trim() === '') {
-      this.errorMsg = 'Password cannot be empty';
-      this.errorFlag = true;
-    }
-    // this.username = this.loginForm.value.username;
-    // this.password = this.loginForm.value.password;
-    // console.log(this.username);
-    // console.log(this.password);
-    alert(this.username);
-
-    this.userService.login(username, password)
-      .subscribe(
-        (data: any) => {
-          this.errorFlag = false;
-          console.log('login method data= ' + data);
-          this.sharedService.user = data;
-          console.log(this.sharedService.user);
-          // this.router.navigate(['/user', user._id]);
-          this.router.navigate(['/profile']);
-        },
-        (error: any) => {
-          this.errorFlag = true;
-          this.errorMsg = 'Invalid username or password !';
-          // this.errorMsg = error;
-          console.log('this is error message = ' + this.errorMsg);
-        }
-      );
-  }
-
-  // }
-
-  // const user: User = this.userService.findUserByCredentials(this.username, this.password);
-  // if (user) {
-  //   console.log('login-----success');
-  //   console.log('login-----username' + this.username);
-  //   console.log('login-----password' + this.password);
-  //   // this.router.navigate(['/profile']);
-  //   // this.router.navigate(['/profile/123']);
-  //   this.router.navigate(['/user', user._id]);
-  // } else {
-  //   this.errorFlag = true;
-  //   console.log('login-----fail');
-  // }
 }

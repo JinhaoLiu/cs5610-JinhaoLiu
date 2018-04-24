@@ -1,62 +1,79 @@
-<nav class="navbar navbar-fixed-top cl-blue-navbar">
-  <div class="row">
-    <div class="col-xs-4 hidden-xs">
-      <div class="container-fluid">
-        <p class="navbar-text pull-left">
-          <a routerLink="/user/{{userId}}/website" class="navbar-link cl-text-white">
-            <span class="glyphicon glyphicon-chevron-left"></span>
-          </a>
-        </p>
-        <a class="cl-text-white navbar-brand cl-text-bold" routerLink=".">
-          Websites
-        </a>
-        <a routerLink="." class="navbar-link navbar-text pull-right cl-text-white cl-icon-padding">
-          <span class="glyphicon glyphicon-plus"></span>
-        </a>
-      </div>
-    </div>
-    <div class="col-xs-8">
-      <div class="container-fluid">
-        <a class="cl-text-white navbar-brand cl-text-bold" routerLink=".">
-          New Websites
-        </a>
-        <a (click)="createNewWebsite(newWebsite)"
-           class="navbar-link navbar-text pull-right cl-text-white cl-icon-padding">
-          <span class="glyphicon glyphicon-ok"></span>
-        </a>
-      </div>
-    </div>
-  </div>
-</nav>
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="contain-fluid">
-  <div class="col-xs-4 hidden-xs">
-    <div *ngFor="let website of websites">
-      <ul class="list-group cl-list-group-borderless">
-        <a routerLink="/user/{{userId}}/website/{{website._id}}"><span class="glyphicon glyphicon-cog pull-right"></span></a>
-        <a routerLink="/user/{{userId}}/website/{{website._id}}/page">{{website.name}}</a>
-      </ul>
+<body>
+<div class="container-fluid ct-no-padding">
+  <div class="card fixed-top">
+    <div class="card-header bg-primary text-white">
+      <div class="row">
+        <div class="col-4 hide-section">
+          <a routerLink="../"><i class="fa fa-chevron-left white-icon" aria-hidden="true"></i></a>
+          <strong class="heading-padding">Websites</strong>
+          <a class="float-right" routerLink="/user/{{userId}}/website/new"><i class="fa fa-plus white-icon"
+                                                                              aria-hidden="true"></i>
+          </a>
+        </div>
+
+        <div class="col-lg-8 col-md-12">
+          <a routerLink="../"><i class="fa fa-chevron-left show-section white-icon"
+                                 aria-hidden="true"></i></a>
+          <strong class="heading-padding">New Website</strong>
+          <button class="btn btn-link float-right icon-no-padding" (click)="f.ngSubmit.emit()"><i
+            class="fa fa-check white-icon"
+            aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="col-xs-8 borders">
-    <form>
-      <div class="form-group cl-8-top">
-        <label for="website-name">Name</label>
-        <input [(ngModel)]="newWebsite.name" type="text" class="form-control" name="name" id="website-name" placeholder="Name">
+    <div class="card-group">
+      <div class="card col-4 p-0 hide-section">
+        <div class="card-body list-no-right-p">
+          <ul class="list-group">
+            <div *ngFor="let website of websites">
+              <li class="list-group-item no-border"><a
+                routerLink="/user/{{userId}}/website/{{website._id}}/page">{{website.name}}</a><a
+                class="float-right"
+                routerLink="/user/{{userId}}/website/{{website._id}}">
+                <i class="fa fa-cog" aria-hidden="true"></i>
+              </a></li>
+            </div>
+          </ul>
+        </div>
       </div>
-      <div class="form-group cl-8-top">
-        <label for="website-description">Description</label>
-        <textarea [(ngModel)]="newWebsite.description" id="website-description" class="form-control" name="description" rows="5" placeholder="Description"></textarea>
+
+      <div class="card p-0 col-lg-8 col-md-12">
+        <div *ngIf="errorFlag"
+             class="alert alert-danger">
+          {{errorMsg}}
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="create()" #f="ngForm">
+            <div class="form-group">
+              <label class="lab-no-m"><strong>Website Name</strong></label>
+              <input
+                [(ngModel)]="name"
+                type="text"
+                class="form-control"
+                name="name"
+                placeholder="name"/>
+              <label class="lab-no-m"><strong>Website Description</strong></label>
+              <textarea
+                [(ngModel)]="description"
+                class="form-control text-muted"
+                type="text"
+                name="description"
+                rows="5">
+            </textarea>
+            </div>
+          </form>
+        </div>
+
       </div>
-    </form>
+    </div>
+    <div class="card-footer bg-primary text-white">
+      <a class="float-right white-icon" routerLink="/user/{{userId}}"><i class="fa fa-user" aria-hidden="true"></i></a>
+    </div>
   </div>
 </div>
-
-<nav class="navbar navbar-fixed-bottom cl-blue-navbar">
-  <div class="container-fuild">
-    <a routerLink="user/{{userId}}" class="navbar-link navbar-text pull-right cl-text-white cl-icon-padding">
-      <span class="glyphicon glyphicon-user"></span>
-    </a>
-  </div>
-</nav>
-
+</body>
+</html>
